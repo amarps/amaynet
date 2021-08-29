@@ -1,0 +1,26 @@
+* structures
+class structures : 
+- TCP 
+  - TCPListener
+    - HTTPServ
+      - HTTPSServ
+  - TCPClient 
+
+Class Abstract
+- TCP(port)
+  - Send()
+  - Recv()
+  - GetFileDescriptor()
+  - GetPort()
+
+- HTTPServ
+  - GetClientAddress()
+  - ProtocolVersion()
+    Get
+  - SendResponse(int, str)
+
+
+
+ 
+
+
