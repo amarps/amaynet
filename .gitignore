@@ -42,8 +42,11 @@ Prerequisites
 # directory configuration
 .dir-locals.el
 
-# ccls
+# editor configuration file
 .ccls-cache/
+coredump
+compile_commands.json
+
 
 # binary folder
 build/
