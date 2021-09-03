@@ -15,6 +15,27 @@ set(CMAKE_CXX_STANDARD_REQUIRED true)
 # add TCPLIB to the current project
 target_link_libraries(${PROJECT_NAME} PUBLIC HTTP TCP)
 
+# add warning level if gcc compiler
+if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
+  target_compile_options(${PROJECT_NAME} PUBLIC
+    -Wall
+    -Wcast-align
+    -Werror
+    -Wextra
+    -Wformat-nonliteral
+    -Wformat=2
+    -Winvalid-pch
+    -Wmissing-declarations
+    -Wmissing-format-attribute
+    -Wmissing-include-dirs
+    -Wredundant-decls
+    -Wredundant-decls
+    -Wswitch-default
+    -Wswitch-enum
+    )
+endif()
+
+
 # add the execuctable
 add_executable(${PROJECT_NAME} src/main.cxx)
 
