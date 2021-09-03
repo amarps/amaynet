@@ -13,8 +13,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED true)
 
 # add TCPLIB to the current project
-add_subdirectory(${PROJECT_SOURCE_DIR}/src/TCP)
-add_subdirectory(${PROJECT_SOURCE_DIR}/src/HTTP)
+target_link_libraries(${PROJECT_NAME} PUBLIC HTTP TCP)
 
 # add the execuctable
 add_executable(${PROJECT_NAME} src/main.cxx)
