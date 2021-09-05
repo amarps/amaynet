@@ -1,0 +1,14 @@
+language: cpp
+
+sudo: required
+
+install:
+  - sudo apt-get install cmake
+
+jobs:
+  include:
+    - os: linux
+      compiler: gcc
+
+script:
+  - cmake -S . -B ./build
