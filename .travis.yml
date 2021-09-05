@@ -4,7 +4,7 @@ sudo: required
 
 install:
   - sudo apt-get install cmake
-  - cmake -v
+  - cmake --version
 
 jobs:
   include:
