@@ -12,8 +12,11 @@ SET ( PROJECT_VERSION "${AMAYHTTPS_VERSION}" )
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED true)
 
-# add TCPLIB to the current project
-target_link_libraries(${PROJECT_NAME} PUBLIC HTTP TCP)
+# add the execuctable
+add_executable(${PROJECT_NAME} src/main.cxx)
+
+add_subdirectory(${PROJECT_SOURCE_DIR}/src/TCP)
+add_subdirectory(${PROJECT_SOURCE_DIR}/src/HTTP)
 
 # add warning level if gcc compiler
 if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
@@ -35,12 +38,8 @@ if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
     )
 endif()
 
-
-# add the execuctable
-add_executable(${PROJECT_NAME} src/main.cxx)
-
-target_link_libraries(${PROJECT_NAME} PUBLIC TCP)
-target_link_libraries(${PROJECT_NAME} PUBLIC HTTP)
+# add TCPLIB to the current project
+target_link_libraries(${PROJECT_NAME} PUBLIC HTTP TCP)
 
 # add configuration file for the project
 # this will generate AMAYHTTPSConfig.h at generated dir
