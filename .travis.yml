@@ -4,6 +4,7 @@ sudo: required
 
 install:
   - sudo apt-get install cmake
+  - cmake -v
 
 jobs:
   include:
@@ -12,5 +13,4 @@ jobs:
 
 script:
   - mkdir build
-  - cmake ..
-  - cmake --build .
+  - cd build
