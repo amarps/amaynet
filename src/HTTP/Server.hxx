@@ -12,7 +12,11 @@ struct sockaddr_storage;
 
 namespace AMAYNET
 {  
-  class HTTPServer : public TCPListener {
+  class HTTPServer : TCPListener {
+  public:
+    using TCPListener::Accept;
+    using TCPListener::m_connection;
+
   public:
     /**
      * @brief
@@ -20,6 +24,7 @@ namespace AMAYNET
      * @return
      */
     HTTPServer(const std::string &port);
+    virtual ~HTTPServer() = default;
     
     /**
      * @brief
@@ -28,12 +33,10 @@ namespace AMAYNET
      * @param content
      * @return
      */
-    void SendHttpResponse(TCP *client, status_T status,
+    void SendHttpResponse(status_T status,
 			  const std::string &content = "");
 
-    void ServeResource(TCP *client, std::string &path);
-
-    virtual ~HTTPServer() = default;
+    void ServeResource(std::string &path);
 
   private:
     /**
@@ -42,7 +45,6 @@ namespace AMAYNET
      * @return
      */
     const std::string get_content_type(const std::string &path);
-    std::forward_list<TCP *> m_connection_list; // store connected socket info
   };
 
 } // namespace AMAY::HTTP

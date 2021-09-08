@@ -46,7 +46,7 @@ namespace AMAYNET
     return content_elm->second;
   }
 
-  void HTTPServer::ServeResource(TCP *client, std::string &path) {
+  void HTTPServer::ServeResource(std::string &path) {
 
     if (path.compare("/") == 0)
       {
@@ -54,7 +54,7 @@ namespace AMAYNET
       }
 
     if (path.length() > 100) {
-      SendHttpResponse(client, GetStatus(Status::BAD_REQUEST));
+      SendHttpResponse(GetStatus(Status::BAD_REQUEST));
       return;
     }
 
@@ -68,7 +68,7 @@ namespace AMAYNET
     
 
     if (!ifs.good()) {
-      SendHttpResponse(client, GetStatus(Status::BAD_REQUEST));
+      SendHttpResponse(GetStatus(Status::BAD_REQUEST));
       std::string errMsg = "Path does not exists ";
       errMsg.append(full_path);
       m_connection.Drop();
@@ -76,6 +76,8 @@ namespace AMAYNET
     }
 
     std::string ct = get_content_type(full_path);
+
+    auto client = m_connection.data();
     
     client->Send("HTTP/1.1 200 OK\r\n");  
 
@@ -101,7 +103,7 @@ namespace AMAYNET
     m_connection.Drop();
   }
 
-  void HTTPServer::SendHttpResponse(TCP *client, status_T status,
+  void HTTPServer::SendHttpResponse(status_T status,
 				const std::string &content) {
     std::stringstream res_stream;
     auto content_length = status.detail.length() + content.length();
@@ -109,7 +111,8 @@ namespace AMAYNET
 	       << "Connection: close" << "\r\n"
 	       << "Content-Length: " << content_length
 	       << "\r\n\r\n" << status.detail << content;
-    client->Send(res_stream.str());
+    
+    m_connection.data()->Send(res_stream.str());
   }
   
   HTTPServer::HTTPServer(const std::string &port)

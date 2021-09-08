@@ -43,16 +43,16 @@ int main(int argc, char *argv[]) {
 	// check if request msg contain \r\n\r\n that indicate end of request
 	if (recv_obj.msg_recv.find("\r\n\r\n") != std::string::npos) {
 	  if (recv_obj.msg_recv.compare(0, 5, "GET /")) { // request not start with GET /
-	    server.SendHttpResponse(server.m_connection.data(), GetStatus(Status::BAD_REQUEST));
+	    server.SendHttpResponse(GetStatus(Status::BAD_REQUEST));
 	  } else { // request start with GET /
 	    //get path
 	    auto path = recv_obj.msg_recv.substr(4);
 	    auto end_path_pos = path.find(' ');
 	    if (end_path_pos == std::string::npos) { // space not found
-	      server.SendHttpResponse(server.m_connection.data(), GetStatus(Status::BAD_REQUEST));
+	      server.SendHttpResponse(GetStatus(Status::BAD_REQUEST));
 	    } else {
 	      path = path.substr(0, end_path_pos);
-	      server.ServeResource(server.m_connection.data(), path);
+	      server.ServeResource(path);
 	    }
 	  }
 	}
