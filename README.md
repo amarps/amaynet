@@ -1,4 +1,3 @@
-# amayhttps
+# amaynet
 
-https server
-
+network lib helper based on bsd socket
