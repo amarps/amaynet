@@ -2,54 +2,82 @@
 #define _AMAYNET_TCP_H
 
 #include <string>
+#include <vector>
 
 struct addrinfo;
 
-/**
- * 
- * ba class for TCP
- */
-class TCP {
-public:
+namespace AMAYNET
+{
   /**
-   * @brief send message to this socket
-   * @param msg_buf content of the message to send
-   * @return number of bytes sent
+   * 
+   * base class for TCP
    */
-  int Send(const std::string &msg_buf);
+  class TCP {
+  public:
+    
+  private:
+    struct Recv_T {
+      size_t bytes_recv;
+      std::string msg_recv;
 
-  /**
-   * @brief receive message to this socket
-   * @param msg_buf content of the message to send
-   * @return number of bytes sent
-   */
-  const std::string Recv(size_t buf_size);
+      Recv_T (size_t _bytes_recv, const std::string &msg)
+	: msg_recv(msg)
+      {
+	bytes_recv  = _bytes_recv;
+      }
+    };
+  public:
+    //! Copy constructor
+    TCP(const TCP &other);
 
-  /* close file descriptor */
-  int Close();
+    //! Copy assignment operator
+    TCP& operator=(const TCP &other);
 
-  inline const std::string GetPort() { return _port; }
-  inline int GetFileDescriptor() { return _file_descriptor; };
+    //! Move constructor
+    TCP(TCP &&other) noexcept;
 
-  virtual ~TCP();
+    //! Destructor
+    virtual ~TCP() noexcept;
 
-  TCP(const std::string &port, int file_descriptor)
-    :_port(port),
-     _file_descriptor(file_descriptor)
-  {}
-
-protected:
-  TCP() = default;
-  TCP(const TCP& other) = default;
-  TCP(TCP &&other) = default;
+    //! Move assignment operator
+    TCP& operator=(TCP &&other);
   
-  explicit TCP(const std::string &port)
-    :_port(port)
-  {}
-  
-  std::string _port = 0;
-  int _file_descriptor = -1;
+    /**
+     * @brief send message in string to this socket
+     * @param msg_buf content of the message to send
+     * @return number of bytes sent
+     */
+    int Send(const std::string &msg_buf);
 
-};
+    /**
+     * @brief send message in byte to this socket
+     * @param msg_buf content of the message to send
+     * @return number of bytes sent
+     */
+    int Send(void *msg, size_t size);
+
+    /**
+     * @brief receive message to this socket
+     * @param msg_buf content of the message to send
+     * @return number of bytes sent, and recv message
+     */
+    Recv_T Recv(size_t buf_size=2047);
+
+    /* close file descriptor */
+    int Close();
+
+    inline const std::string GetPort() { return _port; }
+    inline int GetFD() { return _file_descriptor; };
+
+    explicit TCP(const std::string &port);
+
+    TCP(const std::string &port, int file_descriptor);
+
+  protected:
+    std::string _port = 0;
+    int _file_descriptor = -1;
+  };
+
+} // namespace AMAY::TCP
 
 #endif // _AMAYNET_TCP_H

@@ -1,1 +1,1 @@
-add_library(HTTP http.cxx HTTPServ.cxx)
+add_library(HTTP Server.cxx)
