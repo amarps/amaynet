@@ -15,12 +15,12 @@ namespace AMAYNET
   class HTTPServer : TCPListener {
   public:
     struct HTTPRequest {
+      std::string path;
       enum Method {
 	INVALID = 0,
 	GET,
 	POST
       } request_method;
-      std::string path;
 
       HTTPRequest(std::string _path, Method _request_method)
 	: path(_path),
