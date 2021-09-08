@@ -46,7 +46,7 @@ namespace AMAYNET
     return content_elm->second;
   }
 
-  void HTTPServer::ServeResource(Base *client, std::string &path) {
+  void HTTPServer::ServeResource(TCP *client, std::string &path) {
 
     if (path.compare("/") == 0)
       {
@@ -101,7 +101,7 @@ namespace AMAYNET
     m_connection.Drop();
   }
 
-  void HTTPServer::SendHttpResponse(Base *client, status_T status,
+  void HTTPServer::SendHttpResponse(TCP *client, status_T status,
 				const std::string &content) {
     std::stringstream res_stream;
     auto content_length = status.detail.length() + content.length();
@@ -113,7 +113,7 @@ namespace AMAYNET
   }
   
   HTTPServer::HTTPServer(const std::string &port)
-    : Listener()
+    : TCPListener()
       { }
 
   struct address_info {

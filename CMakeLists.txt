@@ -1,12 +1,12 @@
 cmake_minimum_required(VERSION 3.19.2)
 
 # set the project name
-project(AMAYHTTPS)
-SET ( AMAYHTTPS_VERSION_MAJOR 0 )
-SET ( AMAYHTTPS_VERSION_MINOR 1 )
-SET ( AMAYHTTPS_VERSION_PATCH 0 )
-SET ( AMAYHTTPS_VERSION ${AMAYHTTPS_VERSION_MAJOR}.${AMAYHTTPS_VERSION_MINOR}.${AMAYHTTPS_VERSION_PATCH} )
-SET ( PROJECT_VERSION "${AMAYHTTPS_VERSION}" )
+project(AMAYNET)
+SET ( AMAYNET_VERSION_MAJOR 0 )
+SET ( AMAYNET_VERSION_MINOR 1 )
+SET ( AMAYNET_VERSION_PATCH 0 )
+SET ( AMAYNET_VERSION ${AMAYNET_VERSION_MAJOR}.${AMAYNET_VERSION_MINOR}.${AMAYNET_VERSION_PATCH} )
+SET ( PROJECT_VERSION "${AMAYNET_VERSION}" )
 
 # specify the c++ standard
 set(CMAKE_CXX_STANDARD 17)
@@ -19,7 +19,7 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/src/HTTP)
 # add the execuctable
 add_executable(${PROJECT_NAME} src/main.cxx)
 
-target_link_libraries(${PROJECT_NAME} PUBLIC HTTP TCP)
+target_link_libraries(${PROJECT_NAME} PUBLIC TCP HTTP)
 
 # add warning level if gcc compiler
 if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
@@ -42,8 +42,8 @@ if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
 endif()
 
 # add configuration file for the project
-# this will generate AMAYHTTPSConfig.h at generated dir
-configure_file(AmayHTTPSConfig.h.in AmayHTTPSConfig.h)
+# this will generate AMAYNETConfig.h at generated dir
+configure_file(AmayNetConfig.h.in AmayNetConfig.h)
 
 # add generated project dir to include dir
 target_include_directories(${PROJECT_NAME} PUBLIC "${PROJECT_BINARY_DIR}")

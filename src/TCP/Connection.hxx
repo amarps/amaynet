@@ -7,7 +7,7 @@ namespace AMAYNET {
   class Connection
   {
   public:
-    Connection(Base *_server)
+    Connection(TCP *_server)
       :server(_server)
     {
       _iter = _conn_list.end();
@@ -19,17 +19,17 @@ namespace AMAYNET {
       }
     }
 
-    std::forward_list<Base*>::iterator iter() const
+    std::forward_list<TCP*>::iterator iter() const
     {
       return _iter;
     }
 
-    std::forward_list<Base*>::iterator end()
+    std::forward_list<TCP*>::iterator end()
     {
       return _conn_list.end();
     }
 
-    void push_back(Base *val)
+    void push_back(TCP *val)
     {
       if (_conn_list.empty()) {
 	_conn_list.push_front(val);
@@ -96,19 +96,19 @@ namespace AMAYNET {
       _iter_prev = _conn_list.before_begin();
     }
 
-    Base *data()
+    TCP *data()
     {
       return *_iter;
     }
 
   private:
-    Base* server;
+    TCP* server;
     bool connection_droped;
     fd_set _reads;
-    std::forward_list<Base*> _conn_list;
-    std::forward_list<Base*>::iterator _iter;
-    std::forward_list<Base*>::iterator _iter_prev;
-    std::forward_list<Base*>::iterator _last_element;
+    std::forward_list<TCP*> _conn_list;
+    std::forward_list<TCP*>::iterator _iter;
+    std::forward_list<TCP*>::iterator _iter_prev;
+    std::forward_list<TCP*>::iterator _last_element;
   };
 
   

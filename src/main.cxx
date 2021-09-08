@@ -1,4 +1,4 @@
-#include "AmayHTTPSConfig.h"
+#include "AmayNetConfig.h"
 
 #include <string>
 #include <iostream>
@@ -16,9 +16,9 @@ int main(int argc, char *argv[]) {
   if (argc == 2) {
     if (argv[1] == std::string("--version") || argv[1] == std::string("-V")) {
       std::cout << "Version: "
-		<< AMAYHTTPS_VERSION_MAJOR << "."
-		<< AMAYHTTPS_VERSION_MINOR << "."
-		<< AMAYHTTPS_VERSION_PATCH << std::endl;
+		<< AMAYNET_VERSION_MAJOR << "."
+		<< AMAYNET_VERSION_MINOR << "."
+		<< AMAYNET_VERSION_PATCH << std::endl;
       return 0;
     }
   }
