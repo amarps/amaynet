@@ -8,8 +8,16 @@
 #include "HTTP/status.hxx"
 
 #include <sys/select.h>
+#include <csignal>
 
 using namespace AMAYNET;
+
+sig_atomic_t stopFlag = 0;
+
+static void handler(int)
+{
+  stopFlag = 1;
+}
 
 int main(int argc, char *argv[]) {
   /* check current project version */
@@ -22,11 +30,13 @@ int main(int argc, char *argv[]) {
     }
   }
 
+  signal(SIGINT, &handler);
+
   // create server
   HTTPServer server("8080");
 
   // main loop
-  for (;;) {
+  for (;!stopFlag;) {
     server.Accept();
 
     // loop through client list
@@ -41,7 +51,6 @@ int main(int argc, char *argv[]) {
       } // END check ready to read connection
     } // END connection iteration
     server.ConnectionBegin();
-
   }
   return 0;
 }
