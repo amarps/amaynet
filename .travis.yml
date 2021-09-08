@@ -16,3 +16,4 @@ script:
   - cd build
   - cmake .. -DBUILD_DOC=OFF
   - cmake --build .
+  - ./test_amaynet
