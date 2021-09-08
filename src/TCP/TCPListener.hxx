@@ -10,9 +10,8 @@ struct sockaddr;
 
 namespace AMAYNET
 {
-  class TCPListener : public TCP {
-  public: // nested class or struct declarataion
-
+  class TCPListener : public TCP {    
+  private:
     class Connection
     {
     public:
@@ -47,7 +46,7 @@ namespace AMAYNET
       std::forward_list<TCP*>::iterator _iter_prev;
       std::forward_list<TCP*>::iterator _last_element;
     };
-    
+
   public:
     /**
      * @brief create listening socket at port 8080 and 10 listen size
@@ -68,11 +67,25 @@ namespace AMAYNET
      */
     TCP *Accept();
 
-    Connection m_connection; // store connected socket info
+    bool IsConnectionEnd() {
+      return m_connection.iter() == m_connection.end();
+    }
+
+    bool IsConnectionReady() {
+      return m_connection.Ready();
+    }
+
+    void NextConnection() {
+      m_connection.Next();
+    }
+
+    void ConnectionBegin() {
+      m_connection.MoveToBegin();
+    }
     
   protected:
     int _listen_size; // how much listen queue size
-
+    Connection m_connection; // store connected socket info
     fd_set reads;
     /**
      * @brief create listening socket at port

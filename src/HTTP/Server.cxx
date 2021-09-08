@@ -54,7 +54,7 @@ namespace AMAYNET
       }
 
     if (path.length() > 100) {
-      SendHttpResponse(GetStatus(Status::BAD_REQUEST));
+      SendResponse(GetStatus(Status::BAD_REQUEST));
       return;
     }
 
@@ -68,7 +68,7 @@ namespace AMAYNET
     
 
     if (!ifs.good()) {
-      SendHttpResponse(GetStatus(Status::BAD_REQUEST));
+      SendResponse(GetStatus(Status::BAD_REQUEST));
       std::string errMsg = "Path does not exists ";
       errMsg.append(full_path);
       m_connection.Drop();
@@ -103,7 +103,7 @@ namespace AMAYNET
     m_connection.Drop();
   }
 
-  void HTTPServer::SendHttpResponse(status_T status,
+  void HTTPServer::SendResponse(status_T status,
 				const std::string &content) {
     std::stringstream res_stream;
     auto content_length = status.detail.length() + content.length();

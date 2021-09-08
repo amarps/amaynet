@@ -15,14 +15,13 @@ int main(int argc, char *argv[]) {
   /* check current project version */
   if (argc == 2) {
     if (argv[1] == std::string("--version") || argv[1] == std::string("-V")) {
-      std::cout << "Version: "
-		<< AMAYNET_VERSION_MAJOR << "."
-		<< AMAYNET_VERSION_MINOR << "."
-		<< AMAYNET_VERSION_PATCH << std::endl;
+      std::cout << "Version: " << AMAYNET_VERSION_MAJOR << "."
+                << AMAYNET_VERSION_MINOR << "." << AMAYNET_VERSION_PATCH
+                << std::endl;
       return 0;
     }
   }
-  
+
   // create server
   HTTPServer server("8080");
 
@@ -31,34 +30,17 @@ int main(int argc, char *argv[]) {
     server.Accept();
 
     // loop through client list
-    for (;server.m_connection.iter() != server.m_connection.end();
-	 server.m_connection.Next()) {
+    for (;!server.IsConnectionEnd(); server.NextConnection()) {
       
-      std::cout << "current fd "<< server.m_connection.data()->GetFD() << std::endl;
+      if (server.IsConnectionReady()) { // check ready to read connection
+        auto request = server.GetRequest();
 
-      if (server.m_connection.Ready()) { // check ready to read connection
+	if (request.IsValid())
+	  server.ServeResource(request.path);
 
-        auto recv_obj = server.m_connection.data()->Recv();
-
-	// check if request msg contain \r\n\r\n that indicate end of request
-	if (recv_obj.msg_recv.find("\r\n\r\n") != std::string::npos) {
-	  if (recv_obj.msg_recv.compare(0, 5, "GET /")) { // request not start with GET /
-	    server.SendHttpResponse(GetStatus(Status::BAD_REQUEST));
-	  } else { // request start with GET /
-	    //get path
-	    auto path = recv_obj.msg_recv.substr(4);
-	    auto end_path_pos = path.find(' ');
-	    if (end_path_pos == std::string::npos) { // space not found
-	      server.SendHttpResponse(GetStatus(Status::BAD_REQUEST));
-	    } else {
-	      path = path.substr(0, end_path_pos);
-	      server.ServeResource(path);
-	    }
-	  }
-	}
       } // END check ready to read connection
-    } // END connection loop
-    server.m_connection.MoveToBegin();
+    } // END connection iteration
+    server.ConnectionBegin();
 
   }
   return 0;
