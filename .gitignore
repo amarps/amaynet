@@ -46,6 +46,7 @@ Prerequisites
 .ccls-cache/
 coredump
 compile_commands.json
+scratchpad.org
 
 
 # binary folder
