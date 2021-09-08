@@ -2,7 +2,6 @@
 #define _AMAY_TCPLISTENER_H
 
 #include "TCP.hxx"
-#include "Connection.hxx"
 #include <string>
 #include <forward_list>
 #include <stdexcept>
