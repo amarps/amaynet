@@ -2,7 +2,6 @@
 #define _AMAY_HTTPLISTENER_H
 
 #include "../TCP/TCPListener.hxx"
-#include "status.hxx"
 #include <string>
 #include <string.h>
 #include <sstream>
@@ -32,6 +31,39 @@ namespace AMAYNET
 	return request_method != Method::INVALID;
       }
 
+    };
+
+    /**
+     * 
+     * message and detail from https://httpstatuses.com
+     */
+    struct status_T {
+      int code;
+      std::string msg;
+      std::string detail;
+  
+      status_T(int _code, const std::string &_msg, const std::string &_detail)
+	:code(_code),
+	 msg(_msg),
+	 detail(_detail) {}
+    };
+
+    enum Status {
+      // Success status
+      OK,
+      CREATED,
+      ACCEPTED,
+
+      // Client Error
+      BAD_REQUEST,
+      UNAUTHORIZED,
+      FORBIDDEN,
+      NOT_FOUND,
+      REQUEST_TIMEOUT,
+
+      // Server Error
+      NOT_IMPLEMENTED,
+      HTTP_VERSION_NOT_SUPPORTED,
     };
 
   public:
@@ -88,13 +120,15 @@ namespace AMAYNET
 
     void ServeResource(std::string &path);
 
-  private:
+  protected:
     /**
      * @brief
      * @param path
      * @return
      */
-    const std::string get_content_type(const std::string &path);
+    const std::string GetContentType(const std::string &path);
+
+    const status_T GetStatus(Status _status);
     
   };
 

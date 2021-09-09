@@ -5,7 +5,6 @@
 #include <vector>
 
 #include "HTTP/Server.hxx"
-#include "HTTP/status.hxx"
 
 #include <sys/select.h>
 #include <csignal>
