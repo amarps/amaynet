@@ -20,9 +20,7 @@ extern "C" {
 namespace AMAYNET {
 
   TCPListener::TCPListener()
-    : TCP(),
-      _listen_size(10),
-      m_connection(this) {
+    : m_connection(this) {
   }
   TCPListener::TCPListener(const std::string &port, int listen_size)
     : TCP(port, listen_size),

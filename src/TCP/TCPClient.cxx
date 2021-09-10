@@ -10,7 +10,8 @@ namespace AMAYNET
 {
 
   TCPClient::TCPClient(const std::string &hostname, const std::string &port)
-    : TCP("8080", 10), _hostname(hostname) {
+    : _hostname(hostname) {
+    SetPort("8080");
     SetFD(Connect());
   }
   

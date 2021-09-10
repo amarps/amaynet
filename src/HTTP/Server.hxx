@@ -103,7 +103,7 @@ namespace AMAYNET
       for (int mthd_i=0; mthd_i < num_method_element; mthd_i++) {
 	if (recv_obj.msg_recv
 	    .compare(0, str_req_methods[mthd_i].length(),
-		     str_req_methods[mthd_i])) {
+		     str_req_methods[mthd_i]) == 0) {
 	  path = recv_obj.msg_recv.substr(str_req_methods[mthd_i].length());
 	  requestMethod = (HTTPRequest::Method)(mthd_i + 1);
 	  break;
@@ -119,7 +119,7 @@ namespace AMAYNET
       return HTTPRequest(path, requestMethod);
     };
 
-    void ServeResource(std::string &path);
+    void ServeResource(std::string &path, int chunk_size=default_chunk_size);
 
   protected:
     /**
@@ -128,9 +128,10 @@ namespace AMAYNET
      * @return
      */
     static std::string GetContentType(const std::string &path);
-
     static status_T GetStatus(Status _status);
     
+  private:
+    static constexpr int default_chunk_size = 10;
   };
 
 } // namespace AMAYNET

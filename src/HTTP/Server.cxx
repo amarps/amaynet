@@ -46,20 +46,22 @@ namespace AMAYNET
     return content_elm->second;
   }
 
-  void HTTPServer::ServeResource(std::string &path) {
+  void HTTPServer::ServeResource(std::string &path, int chunk_size) {
 
     if (path == "/")
       {
 	path = "/index.html";
       }
 
-    if (path.length() > 100) {
+    constexpr int max_path_len = 100;
+
+    if (path.length() > max_path_len) {
       SendResponse(GetStatus(Status::BAD_REQUEST));
       return;
     }
 
-    char full_path[128];
-    sprintf(full_path, "public%s", path.c_str());
+    std::string full_path = "public";
+    full_path.append(path);
 
     std::ifstream ifs(full_path, std::ifstream::binary);
     ifs.seekg(0, std::ifstream::end);
@@ -93,10 +95,10 @@ namespace AMAYNET
 
     client->Send("\r\n");
 
-    char buffer[1024];
+    char buffer[chunk_size];
     while(!ifs.eof()) {
-      ifs.read(buffer, 1024);
-      client->Send(buffer, 1024);
+      ifs.read(buffer, chunk_size);
+      client->Send(buffer, chunk_size);
     }
 
     ifs.close();
@@ -116,14 +118,8 @@ namespace AMAYNET
   }
   
   HTTPServer::HTTPServer(const std::string &port)
-    :TCPListener(port, 10)
+    :TCPListener(port)
   { }
-
-  struct address_info {
-    socklen_t address_length;
-    struct sockaddr_storage address;
-    char address_buffer[128];
-  };
 
   HTTPServer::status_T HTTPServer::GetStatus(Status _status) {
     static const std::vector<status_T> v_status = {

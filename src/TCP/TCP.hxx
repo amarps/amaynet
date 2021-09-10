@@ -28,9 +28,7 @@ namespace AMAYNET
     };
   public:
     // empty contstructor
-    TCP()
-      :_port(std::string())
-    { }
+    TCP() = default;
 
     TCP(const std::string &port, int file_descriptor);
     

@@ -59,7 +59,7 @@ namespace AMAYNET
     /**
      * @brief create listening socket at `port` with size of `listen_size`
      */
-    TCPListener(const std::string &port, int listen_size);
+    TCPListener(const std::string &port, int listen_size=default_listen_size);
 
     /**
      * @brief accept connection from `_sockfd` return the connected socket
@@ -106,6 +106,7 @@ namespace AMAYNET
     int _listen_size; // how much listen queue size
     Connection m_connection; // store connected socket info
     fd_set reads;
+    static constexpr int default_listen_size = 10;
   };
 
 #endif // _AMAY_TCPLISTENER_H
