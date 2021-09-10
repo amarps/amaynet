@@ -1,29 +1,31 @@
 #include "TCPListener.hxx"
 namespace AMAYNET {
 
-  TCPListener::Connection::Connection(TCP *_server)
+#define C_CONN TCPListener::Connection
+  
+  C_CONN::Connection(TCP *_server)
     :server(_server)
   {
     _iter = _conn_list.end();
   }
   
-  TCPListener::Connection::~Connection() {
-    for (auto it : _conn_list) {
+  C_CONN::~Connection() {
+    for (auto *it : _conn_list) {
       delete it;
     }
   }
 
-  std::forward_list<TCP*>::iterator TCPListener::Connection::iter() const
+  std::forward_list<TCP*>::iterator C_CONN::iter() const
   {
     return _iter;
   }
 
-  std::forward_list<TCP*>::iterator TCPListener::Connection::end()
+  std::forward_list<TCP*>::iterator C_CONN::end()
   {
     return _conn_list.end();
   }
 
-  void TCPListener::Connection::push_back(TCP *val)
+  void C_CONN::push_back(TCP *val)
   {
     if (_conn_list.empty()) {
       _conn_list.push_front(val);
@@ -35,7 +37,7 @@ namespace AMAYNET {
     _last_element = _conn_list.insert_after(_last_element, val);
   }
   
-  void TCPListener::Connection::Next()
+  void C_CONN::Next()
   {
     if(connection_droped) {
       connection_droped =false;
@@ -45,10 +47,11 @@ namespace AMAYNET {
     ++_iter_prev;
   }
 
-  void TCPListener::Connection::Drop()
+  void C_CONN::Drop()
   {
-    if(_iter == end())
+    if(_iter == end()) {
       return;
+}
     delete *_iter;
     if (_iter == _last_element) {
       _iter = _last_element = _conn_list.erase_after(_iter_prev);
@@ -58,22 +61,24 @@ namespace AMAYNET {
     connection_droped = true;
   }
 
-  bool TCPListener::Connection::Ready() {
+  bool C_CONN::Ready() {
     return FD_ISSET(data()->GetFD(), &_reads);
   }
 
-  fd_set TCPListener::Connection::Wait() {
+  fd_set C_CONN::Wait() {
     FD_ZERO(&_reads);
     FD_SET(server->GetFD(), &_reads);
     int max_socket = server->GetFD();
 
-    if(_conn_list.empty())
+    if(_conn_list.empty()) {
       return _reads;
+}
       
-    for (auto conn_it : _conn_list) {
+    for (auto *conn_it : _conn_list) {
       FD_SET(conn_it->GetFD(), &_reads);
-      if (conn_it->GetFD() > max_socket)
+      if (conn_it->GetFD() > max_socket) {
 	max_socket = conn_it->GetFD();
+}
     }
       
     if (select(max_socket + 1, &_reads, 0, 0, 0) < 0) {
@@ -84,12 +89,12 @@ namespace AMAYNET {
     return _reads;
   }
   
-  void TCPListener::Connection::MoveToBegin()
+  void C_CONN::MoveToBegin()
   {
     _iter = _conn_list.begin();
     _iter_prev = _conn_list.before_begin();
   }
 
-  TCP *TCPListener::Connection::data() { return *_iter; }
+  TCP *C_CONN::data() { return *_iter; }
 
 } // namespace AMAYNET

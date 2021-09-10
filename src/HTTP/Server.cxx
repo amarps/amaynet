@@ -1,13 +1,13 @@
 #include "Server.hxx"
 
-#include <sys/socket.h>
-#include <stdexcept>      // std::out_of_range
-#include <iterator>
-#include <iostream>
-#include <map>
 #include <exception>
-#include <string.h>
 #include <fstream>
+#include <iostream>
+#include <iterator>
+#include <map>
+#include <stdexcept>      // std::out_of_range
+#include <string.h>
+#include <sys/socket.h>
 
 std::vector<u_char> charToVector(const char* arg) {
   return std::vector<u_char>(arg, arg + strlen((char*)arg));
@@ -15,7 +15,7 @@ std::vector<u_char> charToVector(const char* arg) {
 
 namespace AMAYNET
 {
-  const std::string HTTPServer::GetContentType(const std::string &path) {
+  std::string HTTPServer::GetContentType(const std::string &path) {
     
     // will be defined once at the first call
     static const std::map<std::string, std::string> content_list {
@@ -48,7 +48,7 @@ namespace AMAYNET
 
   void HTTPServer::ServeResource(std::string &path) {
 
-    if (path.compare("/") == 0)
+    if (path == "/")
       {
 	path = "/index.html";
       }
@@ -62,22 +62,22 @@ namespace AMAYNET
     sprintf(full_path, "public%s", path.c_str());
 
     std::ifstream ifs(full_path, std::ifstream::binary);
-    ifs.seekg(0, ifs.end);
+    ifs.seekg(0, std::ifstream::end);
     int cl = ifs.tellg();
-    ifs.seekg(0, ifs.beg);
+    ifs.seekg(0, std::ifstream::beg);
     
 
     if (!ifs.good()) {
       SendResponse(GetStatus(Status::BAD_REQUEST));
       std::string errMsg = "Path does not exists ";
       errMsg.append(full_path);
-      m_connection.Drop();
+      DropConnection();
       return;
     }
 
     std::string ct = GetContentType(full_path);
 
-    auto client = m_connection.data();
+    auto *client = CurrentConnection();
     
     client->Send("HTTP/1.1 200 OK\r\n");  
 
@@ -88,7 +88,7 @@ namespace AMAYNET
 		 .append("\r\n"));
 
     client->Send(std::string("Content-Type: ")
-		 .append(ct.c_str())
+		 .append(ct)
 		 .append("\r\n"));
 
     client->Send("\r\n");
@@ -100,10 +100,10 @@ namespace AMAYNET
     }
 
     ifs.close();
-    m_connection.Drop();
+    DropConnection();
   }
 
-  void HTTPServer::SendResponse(status_T status,
+  void HTTPServer::SendResponse(const status_T& status,
 				const std::string &content) {
     std::stringstream res_stream;
     auto content_length = status.detail.length() + content.length();
@@ -112,11 +112,11 @@ namespace AMAYNET
 	       << "Content-Length: " << content_length
 	       << "\r\n\r\n" << status.detail << content;
     
-    m_connection.data()->Send(res_stream.str());
+    CurrentConnection()->Send(res_stream.str());
   }
   
   HTTPServer::HTTPServer(const std::string &port)
-    : TCPListener()
+    :TCPListener(port, 10)
   { }
 
   struct address_info {
@@ -125,7 +125,7 @@ namespace AMAYNET
     char address_buffer[128];
   };
 
-  const HTTPServer::status_T HTTPServer::GetStatus(Status _status) {
+  HTTPServer::status_T HTTPServer::GetStatus(Status _status) {
     static const std::vector<status_T> v_status = {
         // Success status
         status_T(200, "OK", "The request has succeeded."),
@@ -173,4 +173,4 @@ namespace AMAYNET
     return v_status[_status];
   }
 
-} // namespace AMAY::HTTP
+} // namespace AMAYNET

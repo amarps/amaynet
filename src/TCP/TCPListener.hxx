@@ -1,10 +1,13 @@
+#ifndef _HOME_AMAY_CODE_CPP_NETWORKING_AMAYHTTPS_SRC_TCP_TCPLISTENER_HXX
+#define _HOME_AMAY_CODE_CPP_NETWORKING_AMAYHTTPS_SRC_TCP_TCPLISTENER_HXX
+
 #ifndef _AMAY_TCPLISTENER_H
 #define _AMAY_TCPLISTENER_H
 
 #include "TCP.hxx"
-#include <string>
 #include <forward_list>
 #include <stdexcept>
+#include <string>
 
 struct sockaddr;
 
@@ -71,8 +74,16 @@ namespace AMAYNET
       return m_connection.iter() == m_connection.end();
     }
 
+    TCP* CurrentConnection() {
+      return m_connection.data();
+    }
+
     bool IsConnectionReady() {
       return m_connection.Ready();
+    }
+
+    void DropConnection() {
+      m_connection.Drop();
     }
 
     void NextConnection() {
@@ -82,11 +93,7 @@ namespace AMAYNET
     void ConnectionBegin() {
       m_connection.MoveToBegin();
     }
-    
-  protected:
-    int _listen_size; // how much listen queue size
-    Connection m_connection; // store connected socket info
-    fd_set reads;
+
     /**
      * @brief create listening socket at port
      * @return listening socket file descriptor
@@ -94,8 +101,14 @@ namespace AMAYNET
     int Listen(bool relisten_fail = true);
 
   private:
-    void *get_in_addr(sockaddr *sa);
+    static void *get_in_addr(sockaddr *sa);
+
+    int _listen_size; // how much listen queue size
+    Connection m_connection; // store connected socket info
+    fd_set reads;
   };
 
 #endif // _AMAY_TCPLISTENER_H
-}
+} // namespace AMAYNET
+
+#endif

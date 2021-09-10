@@ -1,8 +1,8 @@
 #include "TCPClient.hxx"
 
-#include <sys/socket.h>
-#include <string.h>
 #include <netdb.h>
+#include <string.h>
+#include <sys/socket.h>
 
 #include <system_error>
 
@@ -10,8 +10,8 @@ namespace AMAYNET
 {
 
   TCPClient::TCPClient(const std::string &hostname, const std::string &port)
-    : TCP(port), _hostname(hostname) {
-    _file_descriptor = Connect();
+    : TCP("8080", 10), _hostname(hostname) {
+    SetFD(Connect());
   }
   
   int TCPClient::Connect() {
@@ -25,7 +25,7 @@ namespace AMAYNET
 
     /* get network address */
     addrinfo *res;
-    if ((getaddrinfo(_hostname.c_str(), _port.c_str(), &hints, &res)) != 0) {
+    if ((getaddrinfo(_hostname.c_str(), GetPort().c_str(), &hints, &res)) != 0) {
       throw std::system_error(EFAULT, std::generic_category());
       return -1;
     }
@@ -37,7 +37,7 @@ namespace AMAYNET
       return -1;
     }
 
-    if (connect(sockfd, res->ai_addr, res->ai_addrlen)) {
+    if (connect(sockfd, res->ai_addr, res->ai_addrlen) != 0) {
       throw std::system_error(EFAULT, std::generic_category());
       return -1;
     }
@@ -46,4 +46,4 @@ namespace AMAYNET
 
     return sockfd;
   }
-} // namespace AMAYNET::TCP
+} // namespace AMAYNET

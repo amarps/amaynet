@@ -1,5 +1,5 @@
-#ifndef _AMAYNET_TCP_H
-#define _AMAYNET_TCP_H
+#ifndef _HOME_AMAY_CODE_CPP_NETWORKING_AMAYHTTPS_SRC_TCP_TCP_HXX
+#define _HOME_AMAY_CODE_CPP_NETWORKING_AMAYHTTPS_SRC_TCP_TCP_HXX
 
 #include <string>
 #include <vector>
@@ -27,6 +27,13 @@ namespace AMAYNET
       }
     };
   public:
+    // empty contstructor
+    TCP()
+      :_port(std::string())
+    { }
+
+    TCP(const std::string &port, int file_descriptor);
+    
     //! Copy constructor
     TCP(const TCP &other);
 
@@ -40,44 +47,45 @@ namespace AMAYNET
     virtual ~TCP() noexcept;
 
     //! Move assignment operator
-    TCP& operator=(TCP &&other);
+    TCP& operator=(TCP &&other) noexcept ;
   
     /**
      * @brief send message in string to this socket
      * @param msg_buf content of the message to send
      * @return number of bytes sent
      */
-    int Send(const std::string &msg_buf);
+    int Send(const std::string &msg_buf) const;
 
     /**
      * @brief send message in byte to this socket
      * @param msg_buf content of the message to send
      * @return number of bytes sent
      */
-    int Send(void *msg, size_t size);
+    int Send(void *msg, size_t size) const;
 
     /**
      * @brief receive message to this socket
      * @param msg_buf content of the message to send
      * @return number of bytes sent, and recv message
      */
-    Recv_T Recv(size_t buf_size=2047);
+    Recv_T Recv(size_t buf_size=_default_recv_size) const;
 
     /* close file descriptor */
-    int Close();
+    int Close() const;
 
-    inline const std::string GetPort() { return _port; }
-    inline int GetFD() { return _file_descriptor; };
-
-    explicit TCP(const std::string &port);
-
-    TCP(const std::string &port, int file_descriptor);
+    inline std::string GetPort() { return _port; }
+    inline int GetFD() const { return _file_descriptor; };
 
   protected:
-    std::string _port = 0;
+    int SetFD(int fd) { _file_descriptor = fd; return fd; }
+    void SetPort(const std::string &port);
+
+  private:
+    std::string _port;
     int _file_descriptor = -1;
+    static const int _default_recv_size = 2047;
   };
 
-} // namespace AMAY::TCP
+} // namespace AMAYNET
 
-#endif // _AMAYNET_TCP_H
+#endif // _HOME_AMAY_CODE_CPP_NETWORKING_AMAYHTTPS_SRC_TCP_TCP_HXX

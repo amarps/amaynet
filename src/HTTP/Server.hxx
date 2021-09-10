@@ -1,17 +1,18 @@
-#ifndef _AMAY_HTTPLISTENER_H
-#define _AMAY_HTTPLISTENER_H
+#ifndef _HOME_AMAY_CODE_CPP_NETWORKING_AMAYHTTPS_SRC_HTTP_SERVER_HXX
+#define _HOME_AMAY_CODE_CPP_NETWORKING_AMAYHTTPS_SRC_HTTP_SERVER_HXX
 
 #include "../TCP/TCPListener.hxx"
+#include <forward_list>
+#include <sstream>
 #include <string>
 #include <string.h>
-#include <sstream>
-#include <forward_list>
+#include <utility>
 
 struct sockaddr_storage;
 
 namespace AMAYNET
 {  
-  class HTTPServer : TCPListener {
+  class HTTPServer : public TCPListener {
   public:
     struct HTTPRequest {
       std::string path;
@@ -22,11 +23,11 @@ namespace AMAYNET
       } request_method;
 
       HTTPRequest(std::string _path, Method _request_method)
-	: path(_path),
+	: path(std::move(_path)),
 	  request_method(_request_method)
       { }
 
-      bool IsValid()
+      bool IsValid() const
       {
 	return request_method != Method::INVALID;
       }
@@ -65,15 +66,7 @@ namespace AMAYNET
       NOT_IMPLEMENTED,
       HTTP_VERSION_NOT_SUPPORTED,
     };
-
-  public:
-    using TCPListener::Accept;
-    using TCPListener::NextConnection;
-    using TCPListener::IsConnectionEnd;
-    using TCPListener::IsConnectionReady;
-    using TCPListener::ConnectionBegin;
-
-  public:
+  
     /**
      * @brief
      * @param port
@@ -89,10 +82,10 @@ namespace AMAYNET
      * @param path
      * @return
      */
-    void SendResponse(status_T status, const std::string &path = "");
+    void SendResponse(const status_T& status, const std::string &content = "");
 
     HTTPRequest GetRequest() {
-      auto recv_obj = m_connection.data()->Recv();
+      auto recv_obj = CurrentConnection()->Recv();
       // check if request msg contain \r\n\r\n that indicate end of request
       if (recv_obj.msg_recv.find("\r\n\r\n") == std::string::npos) {
         return HTTPRequest(std::string(), HTTPRequest::INVALID);
@@ -101,12 +94,20 @@ namespace AMAYNET
       auto requestMethod = HTTPRequest::INVALID;
       auto path = std::string();
 
-      if (!recv_obj.msg_recv.compare(0, 5, "GET /")) {
-	path = recv_obj.msg_recv.substr(4);
-	requestMethod = HTTPRequest::GET;
-      } else if (!recv_obj.msg_recv.compare(0, 6, "POST /")) {
-	path = recv_obj.msg_recv.substr(5);
-	requestMethod = HTTPRequest::POST;
+      const int num_method_element = 2;
+      std::string str_req_methods[num_method_element] {
+	"GET /",
+	"POST /"
+      };
+
+      for (int mthd_i=0; mthd_i < num_method_element; mthd_i++) {
+	if (recv_obj.msg_recv
+	    .compare(0, str_req_methods[mthd_i].length(),
+		     str_req_methods[mthd_i])) {
+	  path = recv_obj.msg_recv.substr(str_req_methods[mthd_i].length());
+	  requestMethod = (HTTPRequest::Method)(mthd_i + 1);
+	  break;
+	}
       }
 
       auto end_path_pos = path.find(' ');
@@ -126,11 +127,11 @@ namespace AMAYNET
      * @param path
      * @return
      */
-    const std::string GetContentType(const std::string &path);
+    static std::string GetContentType(const std::string &path);
 
-    const status_T GetStatus(Status _status);
+    static status_T GetStatus(Status _status);
     
   };
 
-} // namespace AMAY::HTTP
-#endif  // _AMAY_HTTPLISTENER_H
+} // namespace AMAYNET
+#endif // _HOME_AMAY_CODE_CPP_NETWORKING_AMAYHTTPS_SRC_HTTP_SERVER_HXX

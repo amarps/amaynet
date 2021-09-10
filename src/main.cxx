@@ -1,19 +1,19 @@
 #include "AmayNetConfig.h"
 
-#include <string>
 #include <iostream>
+#include <string>
 #include <vector>
 
 #include "HTTP/Server.hxx"
 
-#include <sys/select.h>
 #include <csignal>
+#include <sys/select.h>
 
 using namespace AMAYNET;
 
 sig_atomic_t stopFlag = 0;
 
-static void handler(int)
+static void handler(int /*unused*/)
 {
   stopFlag = 1;
 }
@@ -34,8 +34,10 @@ int main(int argc, char *argv[]) {
   // create server
   HTTPServer server("8080");
 
+  server.Listen();
+
   // main loop
-  for (;!stopFlag;) {
+  for (;stopFlag == 0;) {
     server.Accept();
 
     // loop through client list
@@ -44,8 +46,9 @@ int main(int argc, char *argv[]) {
       if (server.IsConnectionReady()) { // check ready to read connection
         auto request = server.GetRequest();
 
-	if (request.IsValid())
+	if (request.IsValid()) {
 	  server.ServeResource(request.path);
+	}
 
       } // END check ready to read connection
     } // END connection iteration
