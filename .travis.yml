@@ -15,6 +15,7 @@ script:
   - ./syntax_check.sh
   - mkdir build
   - cd build
-  - cmake .. -DBUILD_DOC=OFF
+  - cmake .. -DBUILD_DOC=OFF -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+  - cp compile_commands.json ..
   - cmake --build .
   - ./test_amaynet
