@@ -1,10 +1,10 @@
-#ifndef _HOME_AMAY_CODE_CPP_NETWORKING_AMAYHTTPS_SRC_TCP_TCPLISTENER_HXX
-#define _HOME_AMAY_CODE_CPP_NETWORKING_AMAYHTTPS_SRC_TCP_TCPLISTENER_HXX
+#ifndef TCP_TCPLISTENER_HXX
+#define TCP_TCPLISTENER_HXX
 
 #ifndef _AMAY_TCPLISTENER_H
 #define _AMAY_TCPLISTENER_H
 
-#include "TCP.hxx"
+#include "TCP/TCP.hxx"
 #include <forward_list>
 #include <stdexcept>
 #include <string>

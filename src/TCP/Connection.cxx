@@ -1,4 +1,5 @@
-#include "TCPListener.hxx"
+#include "TCP/TCPListener.hxx"
+
 namespace AMAYNET {
 
 #define C_CONN TCPListener::Connection

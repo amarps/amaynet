@@ -1,4 +1,4 @@
-#include "AmayNetConfig.h"
+#include "AmayNetConfig.hxx"
 
 #include <iostream>
 #include <string>

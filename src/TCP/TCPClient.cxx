@@ -1,4 +1,4 @@
-#include "TCPClient.hxx"
+#include "TCP/TCPClient.hxx"
 
 #include <netdb.h>
 #include <string.h>

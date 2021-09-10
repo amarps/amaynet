@@ -1,5 +1,5 @@
-#ifndef _HOME_AMAY_CODE_CPP_NETWORKING_AMAYHTTPS_SRC_TCP_TCP_HXX
-#define _HOME_AMAY_CODE_CPP_NETWORKING_AMAYHTTPS_SRC_TCP_TCP_HXX
+#ifndef TCP_TCP_HXX
+#define TCP_TCP_HXX
 
 #include <string>
 #include <vector>
@@ -86,4 +86,4 @@ namespace AMAYNET
 
 } // namespace AMAYNET
 
-#endif // _HOME_AMAY_CODE_CPP_NETWORKING_AMAYHTTPS_SRC_TCP_TCP_HXX
+#endif // TCP_TCP_HXX

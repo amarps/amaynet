@@ -3,7 +3,7 @@ language: cpp
 sudo: required
 
 install:
-  - sudo apt-get install cmake
+  - sudo apt-get install cmake clang-tidy
   - cmake --version
 
 jobs:
@@ -12,6 +12,7 @@ jobs:
       compiler: gcc
 
 script:
+  - ./syntax_check.sh
   - mkdir build
   - cd build
   - cmake .. -DBUILD_DOC=OFF

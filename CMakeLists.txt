@@ -43,11 +43,11 @@ endif()
 
 # add configuration file for the project
 # this will generate AMAYNETConfig.h at generated dir
-configure_file(AmayNetConfig.h.in AmayNetConfig.h)
+configure_file(AmayNetConfig.h.in ${PROJECT_SOURCE_DIR}/include/AmayNetConfig.hxx)
 
 # add generated project dir to include dir
 target_include_directories(${PROJECT_NAME} PUBLIC "${PROJECT_BINARY_DIR}")
-target_include_directories(${PROJECT_NAME} PUBLIC "${PROJECT_SOURCE_DIR}/src")
+target_include_directories(${PROJECT_NAME} PUBLIC "${PROJECT_SOURCE_DIR}/include")
 
 # ----------------------------- doxygen configuration --------------------------------
 # first we can indicate the documentation build as an option and set it to ON by default
@@ -87,6 +87,6 @@ FetchContent_Declare(
 add_subdirectory(${PROJECT_SOURCE_DIR}/lib/googletest)
 add_executable(test_amaynet test/test_main.cxx)
 
-target_include_directories(test_amaynet PUBLIC "${PROJECT_SOURCE_DIR}/src")
+target_include_directories(test_amaynet PUBLIC "${PROJECT_SOURCE_DIR}/include")
 
 target_link_libraries(test_amaynet HTTP TCP gtest_main gmock_main)
