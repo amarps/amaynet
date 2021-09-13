@@ -1,9 +1,6 @@
 #ifndef TCP_TCPLISTENER_HXX
 #define TCP_TCPLISTENER_HXX
 
-#ifndef _AMAY_TCPLISTENER_H
-#define _AMAY_TCPLISTENER_H
-
 #include "TCP/TCP.hxx"
 #include <forward_list>
 #include <stdexcept>
@@ -106,10 +103,9 @@ namespace AMAYNET
     int _listen_size; // how much listen queue size
     Connection m_connection; // store connected socket info
     fd_set reads;
-    static constexpr int default_listen_size = 10;
+    static const int default_listen_size = 10;
   };
 
-#endif // _AMAY_TCPLISTENER_H
 } // namespace AMAYNET
 
 #endif

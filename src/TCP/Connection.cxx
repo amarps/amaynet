@@ -5,7 +5,8 @@ namespace AMAYNET {
 #define C_CONN TCPListener::Connection
   
   C_CONN::Connection(TCP *_server)
-    :server(_server)
+    :server(_server),
+     connection_droped(false)
   {
     _iter = _conn_list.end();
   }
@@ -52,7 +53,7 @@ namespace AMAYNET {
   {
     if(_iter == end()) {
       return;
-}
+    }
     delete *_iter;
     if (_iter == _last_element) {
       _iter = _last_element = _conn_list.erase_after(_iter_prev);
@@ -73,13 +74,13 @@ namespace AMAYNET {
 
     if(_conn_list.empty()) {
       return _reads;
-}
+    }
       
     for (auto *conn_it : _conn_list) {
       FD_SET(conn_it->GetFD(), &_reads);
       if (conn_it->GetFD() > max_socket) {
 	max_socket = conn_it->GetFD();
-}
+      }
     }
       
     if (select(max_socket + 1, &_reads, 0, 0, 0) < 0) {

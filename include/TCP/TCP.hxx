@@ -80,7 +80,7 @@ namespace AMAYNET
 
   private:
     std::string _port;
-    int _file_descriptor = -1;
+    int _file_descriptor = 0;
     static const int _default_recv_size = 2047;
   };
 
