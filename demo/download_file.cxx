@@ -16,10 +16,10 @@ int main(int argc, char *argv[])
   while (true) {
     if(connector.Ready()) {
       auto recv_obj = connector.Recv(2048);
-      if (recv_obj.bytes_recv == 0) {
+      if (recv_obj.empty()) {
 	break;
       }
-      buffer.insert(buffer.end(), recv_obj.msg_recv.begin(), recv_obj.msg_recv.end());
+      buffer.insert(buffer.end(), recv_obj.begin(), recv_obj.end());
     } else {
       break;
     }

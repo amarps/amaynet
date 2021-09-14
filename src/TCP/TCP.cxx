@@ -58,20 +58,22 @@ namespace AMAYNET
     return sent_byte;
   }
 
-  TCP::Recv_T TCP::Recv(size_t buf_size) const {
+  std::vector<char>
+  TCP::Recv(size_t buf_size) const {
     char recv_buf[buf_size];
     int bytes_recv = recv(_file_descriptor, recv_buf, buf_size, 0);
     if (bytes_recv < 1) {
       if (bytes_recv == 0) {
-	return Recv_T();
+	return std::vector<char>();
       }
       if (bytes_recv == -1) {
 	throw std::system_error(EFAULT, std::generic_category());
       }
     }
 
-    size_t u_bytes_recv = bytes_recv;
-    Recv_T recv_obj{u_bytes_recv, recv_buf};
+    std::vector<char> recv_obj;
+    // copy recv_buf value to recv_obj
+    recv_obj.insert(recv_obj.end(), recv_buf, recv_buf + buf_size);
   
     return recv_obj;
   }

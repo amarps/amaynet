@@ -14,20 +14,6 @@ namespace AMAYNET
    */
   class TCP {
   public:
-    
-  private:
-    struct Recv_T {
-      size_t bytes_recv;
-      std::string msg_recv;
-
-      Recv_T () = default;
-      Recv_T (size_t _bytes_recv, const std::string &msg)
-	: msg_recv(msg)
-      {
-	bytes_recv  = _bytes_recv;
-      }
-    };
-  public:
     // empty contstructor
     TCP() = default;
 
@@ -67,7 +53,8 @@ namespace AMAYNET
      * @param msg_buf content of the message to send
      * @return number of bytes sent, and recv message
      */
-    Recv_T Recv(size_t buf_size=_default_recv_size) const;
+    std::vector<char>
+    Recv(size_t buf_size=_default_recv_size) const;
 
     /* close file descriptor */
     int Close() const;

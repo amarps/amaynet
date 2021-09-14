@@ -86,8 +86,9 @@ namespace AMAYNET
 
     HTTPRequest GetRequest() {
       auto recv_obj = CurrentConnection()->Recv();
+      std::string msg(recv_obj.begin(), recv_obj.end());
       // check if request msg contain \r\n\r\n that indicate end of request
-      if (recv_obj.msg_recv.find("\r\n\r\n") == std::string::npos) {
+      if (msg.find("\r\n\r\n") == std::string::npos) {
         return HTTPRequest(std::string(), HTTPRequest::INVALID);
       }
       
@@ -101,10 +102,10 @@ namespace AMAYNET
       };
 
       for (int mthd_i=0; mthd_i < num_method_element; mthd_i++) {
-	if (recv_obj.msg_recv
+	if (msg
 	    .compare(0, str_req_methods[mthd_i].length(),
 		     str_req_methods[mthd_i]) == 0) {
-	  path = recv_obj.msg_recv.substr(str_req_methods[mthd_i].length() - 1);
+	  path = msg.substr(str_req_methods[mthd_i].length() - 1);
 	  requestMethod = (HTTPRequest::Method)(mthd_i + 1);
 	  break;
 	}
