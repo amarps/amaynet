@@ -10,13 +10,10 @@ namespace AMAYNET
 {
 
   TCPClient::TCPClient(const std::string &hostname, const std::string &port)
-    : _hostname(hostname) {
-    SetPort("8080");
-    SetFD(Connect());
-  }
+    : _hostname(hostname)
+  { }
   
   int TCPClient::Connect() {
-
     /* specify required address */
     addrinfo hints;
     memset(&hints, 0, sizeof(hints));
@@ -44,6 +41,8 @@ namespace AMAYNET
     }
 
     freeaddrinfo(res);
+
+    SetFD(sockfd);
 
     return sockfd;
   }

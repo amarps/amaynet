@@ -14,10 +14,10 @@ namespace AMAYNET
     TCPClient(const std::string &hostname, const std::string &port);
 
     virtual ~TCPClient() = default;
-
-  protected:
-    std::string _hostname;
     int Connect();
+
+  private:
+    std::string _hostname;
   };
 
 } // namespace AMAYNET
