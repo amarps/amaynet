@@ -59,7 +59,7 @@ namespace AMAYNET
      * @param msg_buf content of the message to send
      * @return number of bytes sent
      */
-    int Send(void *msg, size_t size) const;
+    int Send(char *msg, size_t size) const;
 
     /**
      * @brief receive message to this socket

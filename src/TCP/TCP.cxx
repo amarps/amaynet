@@ -50,7 +50,7 @@ namespace AMAYNET
     return sent_byte;
   }
 
-  int TCP::Send(void *msg_buf, size_t size) const {
+  int TCP::Send(char *msg_buf, size_t size) const {
     int sent_byte = send(_file_descriptor, msg_buf, size, 0);
     if (sent_byte < 0) {
       throw std::system_error(EFAULT, std::generic_category());

@@ -104,7 +104,7 @@ namespace AMAYNET
 	if (recv_obj.msg_recv
 	    .compare(0, str_req_methods[mthd_i].length(),
 		     str_req_methods[mthd_i]) == 0) {
-	  path = recv_obj.msg_recv.substr(str_req_methods[mthd_i].length());
+	  path = recv_obj.msg_recv.substr(str_req_methods[mthd_i].length() - 1);
 	  requestMethod = (HTTPRequest::Method)(mthd_i + 1);
 	  break;
 	}
