@@ -45,7 +45,6 @@ int main(int argc, char *argv[]) {
       
       if (server.IsConnectionReady()) { // check ready to read connection
         auto request = server.GetRequest();
-
 	if (request.IsValid()) {
 	  server.ServeResource(request.path);
 	}

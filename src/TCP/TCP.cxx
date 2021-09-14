@@ -60,12 +60,18 @@ namespace AMAYNET
 
   TCP::Recv_T TCP::Recv(size_t buf_size) const {
     char recv_buf[buf_size];
-    size_t bytes_recv = recv(_file_descriptor, recv_buf, buf_size, 0);
+    int bytes_recv = recv(_file_descriptor, recv_buf, buf_size, 0);
     if (bytes_recv < 1) {
-      throw std::system_error(EFAULT, std::generic_category());
+      if (bytes_recv == 0) {
+	return Recv_T();
+      }
+      if (bytes_recv == -1) {
+	throw std::system_error(EFAULT, std::generic_category());
+      }
     }
 
-    Recv_T recv_obj{bytes_recv, recv_buf};
+    size_t u_bytes_recv = bytes_recv;
+    Recv_T recv_obj{u_bytes_recv, recv_buf};
   
     return recv_obj;
   }

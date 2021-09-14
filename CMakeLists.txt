@@ -19,7 +19,8 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/src/HTTP)
 # add the execuctable
 add_executable(${PROJECT_NAME} src/main.cxx)
 
-target_link_libraries(${PROJECT_NAME} PUBLIC TCP HTTP)
+SET ( PROJECT_LIBRARIES TCP HTTP )
+target_link_libraries(${PROJECT_NAME} PUBLIC ${PROJECT_LIBRARIES})
 
 # add warning level if gcc compiler
 if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
@@ -77,16 +78,13 @@ if (BUILD_DOC)
 endif(BUILD_DOC)
 
 # ================== setup google test =======================
-include(FetchContent)
-FetchContent_Declare(
-  googletest
-  URL https://github.com/google/googletest/archive/609281088cfefc76f9d0ce82e1ff6c30cc3591e5.zip
-  )
-
-# For Windows: Prevent overriding the parent project's compiler/linker settings
 add_subdirectory(${PROJECT_SOURCE_DIR}/lib/googletest)
 add_executable(test_amaynet test/test_main.cxx)
 
 target_include_directories(test_amaynet PUBLIC "${PROJECT_SOURCE_DIR}/include")
 
-target_link_libraries(test_amaynet HTTP TCP gtest_main gmock_main)
+target_link_libraries(test_amaynet ${PROJECT_LIBRARIES} gtest_main gmock_main)
+
+# ========================== setup demo ================================
+add_subdirectory(${PROJECT_SOURCE_DIR}/demo)
+

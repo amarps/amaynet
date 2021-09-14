@@ -4,6 +4,7 @@
 #include <string.h>
 #include <sys/socket.h>
 
+#include <iostream>
 #include <system_error>
 
 namespace AMAYNET
@@ -11,7 +12,12 @@ namespace AMAYNET
 
   TCPClient::TCPClient(const std::string &hostname, const std::string &port)
     : _hostname(hostname)
-  { }
+  {
+    SetPort(port);
+    _timeval.tv_sec = 2;
+    _timeval.tv_usec = 0;
+    SetFD(Connect());
+  }
   
   int TCPClient::Connect() {
     /* specify required address */
@@ -41,8 +47,6 @@ namespace AMAYNET
     }
 
     freeaddrinfo(res);
-
-    SetFD(sockfd);
 
     return sockfd;
   }

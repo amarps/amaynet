@@ -20,6 +20,7 @@ namespace AMAYNET
       size_t bytes_recv;
       std::string msg_recv;
 
+      Recv_T () = default;
       Recv_T (size_t _bytes_recv, const std::string &msg)
 	: msg_recv(msg)
       {
@@ -76,7 +77,7 @@ namespace AMAYNET
 
   protected:
     int SetFD(int fd) { _file_descriptor = fd; return fd; }
-    void SetPort(const std::string &port);
+    void SetPort(const std::string &port) { _port = port; }
 
   private:
     std::string _port;
