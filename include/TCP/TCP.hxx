@@ -39,21 +39,21 @@ namespace AMAYNET
      * @param msg_buf content of the message to send
      * @return number of bytes sent
      */
-    int Send(const std::string &msg_buf) const;
+    virtual int Send(const std::string &msg_buf) const;
 
     /**
      * @brief send message in byte to this socket
      * @param msg_buf content of the message to send
      * @return number of bytes sent
      */
-    int Send(char *msg, size_t size) const;
+    virtual int Send(char *msg, size_t size) const;
 
     /**
      * @brief receive message to this socket
      * @param msg_buf content of the message to send
      * @return number of bytes sent, and recv message
      */
-    std::vector<char>
+    virtual std::vector<char>
     Recv(size_t buf_size=_default_recv_size) const;
 
     /* close file descriptor */

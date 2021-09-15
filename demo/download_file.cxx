@@ -11,16 +11,12 @@ int main(int argc, char *argv[])
   AMAYNET::TCPClient connector(argv[1], argv[2]);
   connector.Connect();
   connector.Send("GET /index.html HTTP/1.1\r\n"
+		 "Host: example.org\r\n"
 		 "\r\n\r\n");
   std::vector<char> buffer;
-  while (true) {
-    if(connector.Ready()) {
-      auto recv_obj = connector.Recv(2048);
-      if (recv_obj.empty()) {
-	break;
-      }
-      buffer.insert(buffer.end(), recv_obj.begin(), recv_obj.end());
-    } else {
+  while (connector.Ready()) {
+    auto recv_obj = connector.Recv(2048);
+    if (recv_obj.empty()) {
       break;
     }
   }

@@ -19,7 +19,7 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/src/HTTP)
 # add the execuctable
 add_executable(${PROJECT_NAME} src/main.cxx)
 
-SET ( PROJECT_LIBRARIES TCP HTTP )
+SET ( PROJECT_LIBRARIES TCP HTTP ssl crypto)
 target_link_libraries(${PROJECT_NAME} PUBLIC ${PROJECT_LIBRARIES})
 
 # add warning level if gcc compiler
