@@ -11,12 +11,6 @@
 #include <sys/select.h>
 #include <unistd.h>
 
-#include <openssl/crypto.h>
-#include <openssl/err.h>
-#include <openssl/pem.h>
-#include <openssl/ssl.h>
-#include <openssl/x509.h>
-
 namespace AMAYNET
 {
   class TCPClient : public TCP
@@ -29,17 +23,11 @@ namespace AMAYNET
 
     TCPClient(const std::string &hostname, const std::string &port);
 
-    virtual ~TCPClient();
+    virtual ~TCPClient() { }
 
     int Connect();
 
-    SSL_CTX *InitTLS();
-
     void SetTimeout(size_t sec, size_t micro_sec);
-
-    int Send(const std::string &msg_buf) const;
-
-    std::vector<char> Recv(size_t buf_size) const;
 
     TimeOut_T GetTimeout() const;
 
@@ -49,8 +37,7 @@ namespace AMAYNET
     std::string _hostname;
     timeval _timeval;
     fd_set _reads;
-    SSL_CTX *ssl_ctx;
-    SSL *ssl_obj;
+    bool _use_ssl;
   };
 
 } // namespace AMAYNET
