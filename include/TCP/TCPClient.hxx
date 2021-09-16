@@ -7,6 +7,7 @@
 #include <iostream>
 #include <string>
 
+#include <netdb.h>
 #include <unistd.h>
 #include <sys/select.h>
 
@@ -28,7 +29,11 @@ namespace AMAYNET
 
     TCPClient(const std::string &hostname, const std::string &port);
 
-    virtual ~TCPClient() = default;
+    virtual ~TCPClient() {
+      SSL_shutdown(ssl_obj);
+      SSL_free(ssl_obj);
+      SSL_CTX_free(ssl_ctx);
+    }
     int Connect();
 
     SSL_CTX
@@ -36,6 +41,7 @@ namespace AMAYNET
       SSL_library_init();
       OpenSSL_add_all_algorithms();
       SSL_CTX *ctx = SSL_CTX_new(TLS_client_method());
+
       return ctx;
     }
 
@@ -57,20 +63,31 @@ namespace AMAYNET
     std::vector<char>
     Recv(size_t buf_size) const {
       char recv_buf[buf_size];
-      int bytes_recv = SSL_read(ssl_obj, recv_buf, buf_size);
-
-      sleep(1);
-      std::cout << bytes_recv << std::endl;
-      if (bytes_recv == 0) {
-	return std::vector<char>();
+      int bytes_recv;
+      int err;
+      std::vector<char> recv_obj;
+      
+      bytes_recv =  SSL_read(ssl_obj, recv_buf, buf_size);
+      while (true) {
+	if (bytes_recv < 1) {
+	  err = SSL_get_error(ssl_obj, bytes_recv);
+	  std::cout << err << std::endl;
+	  sleep(1);
+	  if ((err == SSL_ERROR_WANT_READ || err == SSL_ERROR_WANT_WRITE)) {
+	    bytes_recv =  SSL_read(ssl_obj, recv_buf, buf_size);
+	    continue;
+	  } else if (err == SSL_ERROR_ZERO_RETURN) {
+	    return std::vector<char>();
+	  } else if (err == SSL_ERROR_SYSCALL){
+	    return std::vector<char>();
+	    throw std::system_error();
+	  }
+	}
+	break;
       }
 
-      std::vector<char> recv_obj;
-      // copy recv_buf value to recv_obj
-      recv_obj.insert(recv_obj.end(), recv_buf, recv_buf + buf_size);
-      
+      recv_obj.insert(recv_obj.end(), recv_buf, recv_buf + bytes_recv);
       return recv_obj;
-  
     }
 
     TimeOut_T
@@ -89,8 +106,11 @@ namespace AMAYNET
 	perror("Error ");
 	return false;
       }
-      std::cout << "fd isset" << FD_ISSET(GetFD(), &_reads) << std::endl;
-      return FD_ISSET(GetFD(), &_reads);
+
+      if (FD_ISSET(GetFD(), &_reads) > 0)
+	return true;
+      else
+	return false;
     }
 
   private:

@@ -59,6 +59,12 @@ namespace AMAYNET
       return -1;
     }
 
+    if (!SSL_set_tlsext_host_name(ssl_obj, _hostname.c_str())) {
+      std::cerr << "SSL_set_tlsext_host_name() failed." << std::endl;
+      ERR_print_errors_fp(stderr);
+      return -1;
+    }
+
     SSL_set_fd(ssl_obj, sockfd);
     if (SSL_connect(ssl_obj) == -1) {
       std::cerr << "SSL_connect() failed." << std::endl;
