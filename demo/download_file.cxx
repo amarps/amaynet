@@ -4,26 +4,6 @@
 #include "common.hxx"
 #include <unistd.h>
 
-class Downloader: AMAYNET::TCPClient {
-  std::vector<char> Recv(size_t buf_size) {
-    std::vector<char> buffer;
- 
-    while (true) {
-      if (Ready()) {
-	auto recv_obj = Recv(buf_size);
-	if(recv_obj.size() > 0) {
-	  buffer.insert(buffer.end(), recv_obj.begin(), recv_obj.end());
-	} else if (recv_obj.empty()) {
-	  break;
-	}
-      } else {
-	break;
-      }
-    }
-    return buffer;
-  }
-};
-
 int main(int argc, char *argv[]) {
   if (argc < 2) {
     std::cout << "Usage: download_file https://www.google.com" << std::endl;
@@ -40,6 +20,21 @@ int main(int argc, char *argv[]) {
 	  << "\r\n";
 
   connector.Send(request.str());
+
+  std::vector<char> buffer;
+ 
+  while (true) {
+    if (connector.Ready()) {
+      auto recv_obj = connector.Recv(2096);
+      if(recv_obj.size() > 0) {
+	buffer.insert(buffer.end(), recv_obj.begin(), recv_obj.end());
+      } else if (recv_obj.empty()) {
+	break;
+      }
+    } else {
+      break;
+    }
+  }
 
   for (const auto &c : buffer)
     printf("%c", c);

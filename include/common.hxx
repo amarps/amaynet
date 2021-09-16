@@ -1,5 +1,5 @@
-#ifndef AMAYNETCOMMON_HXX
-#define AMAYNETCOMMON_HXX
+#ifndef COMMON_HXX
+#define COMMON_HXX
 
 #include <string>
 
@@ -17,4 +17,4 @@ struct URL_T {
 
 } // namespace AMAYNET
 
-#endif // AMAYNETCONFIG_HXX
+#endif // COMMON_HXX

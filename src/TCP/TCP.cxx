@@ -32,14 +32,14 @@ namespace AMAYNET
   }
   
   TCP::TCP(const TCP &other)
-    : _file_descriptor(other._file_descriptor),
-      _port(other._port)
+    : _port(other._port),
+      _file_descriptor(other._file_descriptor)
   {}
 
   TCP::TCP(TCP &&other) noexcept
     : _port(std::move(other._port)), _file_descriptor(other._file_descriptor) {
-    other._file_descriptor = 0;
     other._port.clear();
+    other._file_descriptor = 0;
   }
 
   int TCP::Send(const std::string &msg_buf) const {

@@ -20,22 +20,26 @@ extern "C" {
 namespace AMAYNET {
 
   TCPListener::TCPListener()
-    : m_connection(this),
-      _listen_size(default_listen_size)
+    : _listen_size(default_listen_size),
+      m_connection(this)
   { }
 
   TCPListener::TCPListener(const std::string &port, int listen_size)
     : TCP(port, 0),
       _listen_size(listen_size),
       m_connection(this)
-   { }
-  
+   { }  
+
   void *TCPListener::get_in_addr(sockaddr *sa) {
     if (sa->sa_family == AF_INET) {
-      return &(((struct sockaddr_in *)sa)->sin_addr);
+      sockaddr_in *sa_in;
+      memcpy(&sa_in, &sa, sizeof(sa));
+      return &sa_in->sin_addr;
     }
-
-    return &(((struct sockaddr_in6 *)sa)->sin6_addr);  
+    
+    sockaddr_in6 *sa_in6;
+    memcpy(&sa_in6, &sa, sizeof(sa));
+    return &sa_in6->sin6_addr;  
   }
 
 

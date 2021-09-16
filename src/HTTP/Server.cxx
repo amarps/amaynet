@@ -9,10 +9,6 @@
 #include <string.h>
 #include <sys/socket.h>
 
-std::vector<u_char> charToVector(const char* arg) {
-  return std::vector<u_char>(arg, arg + strlen((char*)arg));
-}
-
 namespace AMAYNET
 {
   std::string HTTPServer::GetContentType(const std::string &path) {
