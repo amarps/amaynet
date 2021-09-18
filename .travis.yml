@@ -27,4 +27,4 @@ script:
   # run testing
   - cd test
   - ./test_test
-  - ./test_common
+  - ./common_test
