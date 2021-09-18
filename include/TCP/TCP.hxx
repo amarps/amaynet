@@ -4,71 +4,73 @@
 #include <string>
 #include <vector>
 
-struct addrinfo;
+typedef struct ssl_ctx_st SSL_CTX;
+typedef struct ssl_st SSL;
 
 namespace AMAYNET
 {
-  /**
-   * 
-   * base class for TCP
-   */
+  /* base class for TCP */
   class TCP {
   public:
-    // empty contstructor
     TCP() = default;
-
     TCP(const std::string &port, int file_descriptor);
-    
-    //! Copy constructor
-    TCP(const TCP &other);
-
-    //! Copy assignment operator
-    TCP& operator=(const TCP &other);
-
-    //! Move constructor
-    TCP(TCP &&other) noexcept;
-
-    //! Destructor
     virtual ~TCP() noexcept;
+    TCP(const TCP &other); 
+    TCP(TCP &&other) noexcept;
+    TCP& operator=(const TCP &other);
+    TCP& operator=(TCP &&other) noexcept;
 
-    //! Move assignment operator
-    TCP& operator=(TCP &&other) noexcept ;
-  
     /**
      * @brief send message in string to this socket
      * @param msg_buf content of the message to send
      * @return number of bytes sent
      */
-    int Send(const std::string &msg_buf) const;
+    virtual int Send(const std::string &msg_buf);
 
     /**
      * @brief send message in byte to this socket
      * @param msg_buf content of the message to send
      * @return number of bytes sent
      */
-    int Send(char *msg, size_t size) const;
+    virtual int Send(char *msg, size_t size);
 
     /**
      * @brief receive message to this socket
      * @param msg_buf content of the message to send
      * @return number of bytes sent, and recv message
      */
-    std::vector<char>
-    Recv(size_t buf_size=_default_recv_size) const;
+    virtual std::vector<char>
+    Recv(size_t buf_size=_default_recv_size);
 
     /* close file descriptor */
     int Close() const;
 
     inline std::string GetPort() { return _port; }
     inline int GetFD() const { return _file_descriptor; };
+    bool IsUseSSL() const { return _is_use_ssl; };
+    virtual SSL_CTX *GetSSLCTX() { return ssl_ctx; } 
+    virtual SSL *GetSSLObj() { return ssl_obj; }
 
   protected:
     int SetFD(int fd) { _file_descriptor = fd; return fd; }
-    void SetPort(const std::string &port) { _port = port; }
+    
+    /* set port and use ssl if (port == 443) */
+    void SetPort(const std::string &port);
+    SSL_CTX *InitSSLCTX();
+    SSL *InitSSL(const std::string &hostname);
+
+    std::vector<char>
+    RecvSSL(size_t buf_size=_default_recv_size);
+
+    std::vector<char>
+    RecvTCP (size_t buf_size=_default_recv_size) const;
 
   private:
     std::string _port;
-    int _file_descriptor = 0;
+    int _file_descriptor;
+    bool _is_use_ssl;
+    SSL_CTX *ssl_ctx;
+    SSL *ssl_obj;
     static const int _default_recv_size = 2047;
   };
 

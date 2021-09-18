@@ -1,4 +1,3 @@
-
 #ifndef TCP_TCPCLIENT_HXX
 #define TCP_TCPCLIENT_HXX
 
@@ -6,8 +5,6 @@
 
 #include <iostream>
 #include <string>
-
-#include <sys/select.h>
 
 namespace AMAYNET
 {
@@ -18,35 +15,14 @@ namespace AMAYNET
       int second;
       int micro_second;
     };
-    
+
     TCPClient(const std::string &hostname, const std::string &port);
+    virtual ~TCPClient() { }
 
-    virtual ~TCPClient() = default;
     int Connect();
-
-    void SetTimeout(size_t sec, size_t micro_sec)
-    {
-      _timeval.tv_sec = sec;
-      _timeval.tv_usec = micro_sec;
-    }
-
-    TimeOut_T GetTimeout() const
-    {
-      TimeOut_T ret;
-      ret.second = _timeval.tv_sec;
-      ret.micro_second = _timeval.tv_usec;
-      return ret;
-    };
-
-    bool Ready() {
-      FD_ZERO(&_reads);
-      FD_SET(GetFD(), &_reads);
-      if (select(GetFD() + 1, &_reads, 0, 0, &_timeval) < 0) {
-	perror("Error ");
-	return false;
-      }
-      return FD_ISSET(GetFD(), &_reads);
-    }
+    void SetTimeout(size_t sec, size_t micro_sec);
+    TimeOut_T GetTimeout() const;
+    bool Ready();
 
   private:
     std::string _hostname;

@@ -9,6 +9,7 @@ install:
 jobs:
   include:
     - os: linux
+      dist: bionic
       compiler: gcc
 
 script:

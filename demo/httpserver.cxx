@@ -1,13 +1,7 @@
-#include "AmayNetConfig.hxx"
-
-#include <iostream>
-#include <string>
-#include <vector>
-
 #include "HTTP/Server.hxx"
 
+#include <iostream>
 #include <csignal>
-#include <sys/select.h>
 
 using namespace AMAYNET;
 
@@ -19,20 +13,14 @@ static void handler(int /*unused*/)
 }
 
 int main(int argc, char *argv[]) {
-  /* check current project version */
-  if (argc == 2) {
-    if (argv[1] == std::string("--version") || argv[1] == std::string("-V")) {
-      std::cout << "Version: " << AMAYNET_VERSION_MAJOR << "."
-                << AMAYNET_VERSION_MINOR << "." << AMAYNET_VERSION_PATCH
-                << std::endl;
-      return 0;
-    }
+  if (argc < 2) {
+    std::cout << "Usage: httpserver 8080";
   }
-
-  signal(SIGINT, &handler);
+  
+  signal(SIGINT, &handler); // signal for terminate program
 
   // create server
-  HTTPServer server("8080");
+  HTTPServer server(argv[1]);
 
   server.Listen();
 

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 # set the project name
-project(AMAYNET)
+project(amaynet)
 SET ( AMAYNET_VERSION_MAJOR 0 )
 SET ( AMAYNET_VERSION_MINOR 1 )
 SET ( AMAYNET_VERSION_PATCH 0 )
@@ -12,15 +12,16 @@ SET ( PROJECT_VERSION "${AMAYNET_VERSION}" )
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED true)
 
-# add TCPLIB to the current project
-add_subdirectory(${PROJECT_SOURCE_DIR}/src/TCP)
-add_subdirectory(${PROJECT_SOURCE_DIR}/src/HTTP)
+# add sources to the current project
+aux_source_directory(${PROJECT_SOURCE_DIR}/src/ SRC)
+aux_source_directory(${PROJECT_SOURCE_DIR}/src/TCP TCP_SRC)
+aux_source_directory(${PROJECT_SOURCE_DIR}/src/HTTP HTTP_SRC)
+set (SOURCES
+  ${SRC}
+  ${TCP_SRC}
+  ${HTTP_SRC})
 
-# add the execuctable
-add_executable(${PROJECT_NAME} src/main.cxx)
-
-SET ( PROJECT_LIBRARIES TCP HTTP )
-target_link_libraries(${PROJECT_NAME} PUBLIC ${PROJECT_LIBRARIES})
+add_library(${PROJECT_NAME} SHARED ${SOURCES})
 
 # add warning level if gcc compiler
 if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
@@ -83,7 +84,7 @@ add_executable(test_amaynet test/test_main.cxx)
 
 target_include_directories(test_amaynet PUBLIC "${PROJECT_SOURCE_DIR}/include")
 
-target_link_libraries(test_amaynet ${PROJECT_LIBRARIES} gtest_main gmock_main)
+target_link_libraries(test_amaynet amaynet gtest_main gmock_main ssl crypto)
 
 # ========================== setup demo ================================
 add_subdirectory(${PROJECT_SOURCE_DIR}/demo)
