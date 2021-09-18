@@ -16,14 +16,16 @@ namespace AMAYNET
   {
     SetPort(port);
     SetTimeout(2, 0);
-    if(IsUseSSL())
+    if (IsUseSSL()) {
       TCP::InitSSLCTX();
+    }
 
     SetFD(Connect());
 
     /* Connected */
-    if (IsUseSSL())
+    if (IsUseSSL()) {
       TCP::InitSSL(_hostname);
+    }
   }
 
   void TCPClient::

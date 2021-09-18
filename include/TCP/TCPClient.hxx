@@ -1,4 +1,3 @@
-
 #ifndef TCP_TCPCLIENT_HXX
 #define TCP_TCPCLIENT_HXX
 
@@ -6,10 +5,6 @@
 
 #include <iostream>
 #include <string>
-
-#include <netdb.h>
-#include <sys/select.h>
-#include <unistd.h>
 
 namespace AMAYNET
 {
@@ -22,22 +17,17 @@ namespace AMAYNET
     };
 
     TCPClient(const std::string &hostname, const std::string &port);
-
     virtual ~TCPClient() { }
 
     int Connect();
-
     void SetTimeout(size_t sec, size_t micro_sec);
-
     TimeOut_T GetTimeout() const;
-
     bool Ready();
 
   private:
     std::string _hostname;
     timeval _timeval;
     fd_set _reads;
-    bool _use_ssl;
   };
 
 } // namespace AMAYNET

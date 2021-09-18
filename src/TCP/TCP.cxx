@@ -7,8 +7,8 @@
 
 #include <fcntl.h>
 #include <netdb.h>
-#include <sys/socket.h>
 #include <string.h> // memset
+#include <sys/socket.h>
 #include <unistd.h>
 
 #include <openssl/crypto.h>
@@ -78,10 +78,10 @@ namespace AMAYNET
 
   std::vector<char> TCP::
   Recv(size_t buf_size) {
-    if (IsUseSSL())
+    if (IsUseSSL()) {
       return RecvSSL(buf_size);
-    else
-      return RecvTCP(buf_size);
+    }
+    return RecvTCP(buf_size);
   }
 
   std::vector<char> TCP::
@@ -112,7 +112,7 @@ namespace AMAYNET
   }
 
   std::vector<char>
-  TCP::RecvTCP(size_t buf_size) {
+  TCP::RecvTCP(size_t buf_size) const {
     char recv_buf[buf_size];
     int bytes_recv = recv(_file_descriptor, recv_buf, buf_size, 0);
     if (bytes_recv < 1) {
@@ -129,6 +129,65 @@ namespace AMAYNET
     recv_obj.insert(recv_obj.end(), recv_buf, recv_buf + buf_size);
   
     return recv_obj;
+  }
+
+  SSL *TCP::
+  InitSSL(const std::string &hostname) {
+    ssl_obj = SSL_new(ssl_ctx);
+    if (ssl_obj == nullptr) {
+      std::cerr << "SSL_new() failed." << std::endl;
+      return nullptr;
+    }
+
+    if (!SSL_set_tlsext_host_name(ssl_obj, hostname.c_str())) {
+      std::cerr << "SSL_set_tlsext_host_name() failed." << std::endl;
+      ERR_print_errors_fp(stderr);
+      return nullptr;
+    }
+
+    SSL_set_fd(ssl_obj, GetFD());
+    if (SSL_connect(ssl_obj) == -1) {
+      std::cerr << "SSL_connect() failed." << std::endl;
+      return nullptr;
+    }
+
+    X509 *cert = SSL_get_peer_certificate(ssl_obj);
+    if (cert == nullptr) {
+      std::cerr << "SSL_get_peer_certificate(ssl_obj) failed." << std::endl;
+      return nullptr;
+    }
+
+    char *tmp;
+    if ((tmp = X509_NAME_oneline(X509_get_subject_name(cert), 0, 0)) != nullptr) {
+      std::cout << "subject: " << tmp << std::endl;      
+    }
+
+    if ((tmp = X509_NAME_oneline(X509_get_issuer_name(cert), 0, 0)) != nullptr) {
+      std::cout << "issuer: " << tmp << std::endl;
+    }
+
+    X509_free(cert);
+
+    // get current socket flags
+    int flags;
+    flags = fcntl(GetFD(), F_GETFL, 0);
+
+    // set nonblocking socket
+    fcntl(GetFD(), F_SETFL, flags | O_NONBLOCK);
+    return ssl_obj;
+  }
+
+  SSL_CTX *TCP::
+  InitSSLCTX() {
+    SSL_library_init();
+    OpenSSL_add_all_algorithms();
+    SSL_load_error_strings();
+    ssl_ctx = SSL_CTX_new(TLS_client_method());
+    if (ssl_ctx==nullptr) {
+      std::cerr << "SSL_CTX_new() failed." << std::endl;
+    }
+      
+    return ssl_ctx;
   }
 
   void TCP::SetPort(const std::string &port) {
