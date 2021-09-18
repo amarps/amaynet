@@ -13,12 +13,18 @@ jobs:
       compiler: gcc
 
 script:
+  # generating build directory
   - mkdir build
   - cd build
   - cmake .. -DBUILD_DOC=OFF -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
   - cp compile_commands.json ..
   - cd ..
+  # syntax checking
   - ./syntax_check.sh
+  # build project
   - cd build
   - cmake --build .
-  - ./test_amaynet
+  # run testing
+  - cd test
+  - ./test_test
+  - ./common_test

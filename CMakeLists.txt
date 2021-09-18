@@ -80,11 +80,7 @@ endif(BUILD_DOC)
 
 # ================== setup google test =======================
 add_subdirectory(${PROJECT_SOURCE_DIR}/lib/googletest)
-add_executable(test_amaynet test/test_main.cxx)
-
-target_include_directories(test_amaynet PUBLIC "${PROJECT_SOURCE_DIR}/include")
-
-target_link_libraries(test_amaynet amaynet gtest_main gmock_main ssl crypto)
+add_subdirectory(${PROJECT_SOURCE_DIR}/test)
 
 # ========================== setup demo ================================
 add_subdirectory(${PROJECT_SOURCE_DIR}/demo)
