@@ -22,7 +22,7 @@ namespace AMAYNET
   TCP& TCP::operator=(TCP &&other) noexcept {
     std::swap(_file_descriptor, other._file_descriptor);
     std::swap(_port, other._port);
-
+    
     return *this;
   }
 
@@ -39,14 +39,23 @@ namespace AMAYNET
   }
   
   TCP::TCP(const TCP &other)
-    : _port(other._port),
-      _file_descriptor(other._file_descriptor)
-  {}
+    :_port(other._port),
+     _file_descriptor(other._file_descriptor),
+     _is_use_ssl(other._is_use_ssl),
+     ssl_ctx(other.ssl_ctx),
+     ssl_obj(other.ssl_obj)
+  { }
 
   TCP::TCP(TCP &&other) noexcept
-    : _port(std::move(other._port)), _file_descriptor(other._file_descriptor) {
+    : _port(other._port),
+      _file_descriptor(other._file_descriptor),
+      _is_use_ssl(other._is_use_ssl),
+      ssl_ctx(other.ssl_ctx),
+      ssl_obj(other.ssl_obj) {
     other._port.clear();
     other._file_descriptor = 0;
+    other.ssl_ctx = nullptr;
+    other.ssl_obj = nullptr;
   }
 
   int TCP::Send(const std::string &msg_buf) {
@@ -203,7 +212,7 @@ namespace AMAYNET
   }
 
   TCP::~TCP() noexcept {
-    if (IsUseSSL()) {
+    if (IsUseSSL() && (ssl_obj || ssl_ctx)) {
       SSL_shutdown(ssl_obj);
       SSL_free(ssl_obj);
       SSL_CTX_free(ssl_ctx);
