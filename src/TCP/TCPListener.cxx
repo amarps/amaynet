@@ -112,7 +112,6 @@ namespace AMAYNET {
     }
 
     /* convert network client address to printable client address */
-    // TODO create connected store
     char addrbuf[INET6_ADDRSTRLEN];
     inet_ntop(client_addr.ss_family,
               get_in_addr((struct sockaddr *)&client_addr), addrbuf,

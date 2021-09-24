@@ -19,11 +19,13 @@ namespace AMAYNET
     TCPClient(const std::string &hostname, const std::string &port);
     virtual ~TCPClient() { }
 
-    int Connect();
     void SetTimeout(size_t sec, size_t micro_sec);
     TimeOut_T GetTimeout() const;
     bool Ready();
 
+  protected:
+    int Connect();
+    
   private:
     std::string _hostname;
     timeval _timeval;

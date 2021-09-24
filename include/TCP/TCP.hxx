@@ -12,7 +12,7 @@ namespace AMAYNET
   /* base class for TCP */
   class TCP {
   public:
-    TCP() = default;
+    TCP();
     TCP(const std::string &port, int file_descriptor);
     virtual ~TCP() noexcept;
     TCP(const TCP &other); 
@@ -46,8 +46,8 @@ namespace AMAYNET
     int Close() const;
 
     inline std::string GetPort() { return _port; }
-    inline int GetFD() const { return _file_descriptor; };
-    bool IsUseSSL() const { return _is_use_ssl; };
+    inline int GetFD() const { return _file_descriptor; }
+    bool IsUseSSL() const { return _is_use_ssl; }
     virtual SSL_CTX *GetSSLCTX() { return ssl_ctx; } 
     virtual SSL *GetSSLObj() { return ssl_obj; }
 
@@ -61,7 +61,6 @@ namespace AMAYNET
 
     std::vector<char>
     RecvSSL(size_t buf_size=_default_recv_size);
-
     std::vector<char>
     RecvTCP (size_t buf_size=_default_recv_size) const;
 
