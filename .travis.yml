@@ -28,3 +28,4 @@ script:
   - cd test
   - ./test_test
   - ./common_test
+  - ./TCP_test
