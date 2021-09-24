@@ -56,7 +56,7 @@ namespace AMAYNET
       return;
     }
 
-    std::string full_path = "public";
+    std::string full_path = GetHostDir();
     full_path.append(path);
 
     std::ifstream ifs(full_path, std::ifstream::binary);
