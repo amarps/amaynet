@@ -22,9 +22,13 @@ namespace AMAYNET
   TCP& TCP::operator=(TCP &&other) noexcept {
     std::swap(_file_descriptor, other._file_descriptor);
     std::swap(_port, other._port);
-
+    
     return *this;
   }
+
+  TCP::TCP() :
+    _file_descriptor(0),
+    _is_use_ssl(false) {}
 
   TCP::TCP(const std::string &port, int file_descriptor) {
     SetPort(port);
@@ -39,39 +43,41 @@ namespace AMAYNET
   }
   
   TCP::TCP(const TCP &other)
-    : _port(other._port),
-      _file_descriptor(other._file_descriptor)
-  {}
+    :_port(other._port),
+     _file_descriptor(other._file_descriptor),
+     _is_use_ssl(other._is_use_ssl),
+     ssl_ctx(other.ssl_ctx),
+     ssl_obj(other.ssl_obj)
+  { }
 
   TCP::TCP(TCP &&other) noexcept
-    : _port(std::move(other._port)), _file_descriptor(other._file_descriptor) {
+    : _port(std::move(other._port)),
+      _file_descriptor(other._file_descriptor),
+      _is_use_ssl(other._is_use_ssl),
+      ssl_ctx(other.ssl_ctx),
+      ssl_obj(other.ssl_obj) {
     other._port.clear();
     other._file_descriptor = 0;
+    other.ssl_ctx = nullptr;
+    other.ssl_obj = nullptr;
   }
 
   int TCP::Send(const std::string &msg_buf) {
-    int sent_byte;
-    if (IsUseSSL()) {
-      sent_byte = SSL_write(ssl_obj, msg_buf.c_str(), msg_buf.length());
-    } else {
-      sent_byte = send(_file_descriptor, msg_buf.c_str(), msg_buf.length(), 0);
-    }
-    if (sent_byte < 0) {
-      throw std::system_error(EFAULT, std::generic_category());
-    }
+    std::vector<char> msg_chrs(msg_buf.begin(), msg_buf.end());
+    int sent_byte = Send(msg_chrs.data(), msg_buf.size());
     return sent_byte;
   }
 
   int TCP::Send(char *msg_buf, size_t size) {
     int sent_byte;
     if (IsUseSSL()) {
-      sent_byte = send(_file_descriptor, msg_buf, size, 0);
+      sent_byte = SSL_write(ssl_obj, msg_buf, size);
     } else {
       sent_byte = send(_file_descriptor, msg_buf, size, 0);
     }
-    
     if (sent_byte < 0) {
       throw std::system_error(EFAULT, std::generic_category());
+      return -1;
     }
     return sent_byte;
   }
@@ -203,7 +209,7 @@ namespace AMAYNET
   }
 
   TCP::~TCP() noexcept {
-    if (IsUseSSL()) {
+    if (IsUseSSL() && (ssl_obj || ssl_ctx)) {
       SSL_shutdown(ssl_obj);
       SSL_free(ssl_obj);
       SSL_CTX_free(ssl_ctx);

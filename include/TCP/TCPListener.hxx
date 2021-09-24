@@ -59,9 +59,7 @@ namespace AMAYNET
     TCPListener(const std::string &port, int listen_size=default_listen_size);
 
     /**
-     * @brief accept connection from `_sockfd` return the connected socket
-     * descriptor. store the client addr buff in `ret_client_buffer`.
-     * @param `ret_client_addr` printable connected client addr.
+     * @brief accept connection
      * @return connected socket descriptor.
      * @return -1 if fail.
      */

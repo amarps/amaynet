@@ -1,6 +1,6 @@
 ---
 Checks:          'clang-diagnostic-*,-clang-analyzer-cplusplus*,-cppcoreguidelines-*,readability-*,performance-*,llvm-*'
-WarningsAsErrors: 'clang-diagnostic-*,-clang-analyzer-cplusplus*,-cppcoreguidelines-*,readability-*,performance-*,llvm-*'
+WarningsAsErrors: 'clang-diagnostic-*,-clang-analyzer-cplusplus*,-cppcoreguidelines-*,performance-*,llvm-*'
 HeaderFilterRegex: ''
 AnalyzeTemporaryDtors: false
 FormatStyle:     none
