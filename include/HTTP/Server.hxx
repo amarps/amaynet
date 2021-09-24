@@ -122,6 +122,9 @@ namespace AMAYNET
 
     void ServeResource(std::string &path, int chunk_size=default_chunk_size);
 
+    std::string GetHostDir() { return _hostdir; }
+    void SetHostDir(const std::string &dir) { _hostdir = dir; }
+
   protected:
     /**
      * @brief
@@ -133,6 +136,7 @@ namespace AMAYNET
     
   private:
     static constexpr int default_chunk_size = 10;
+    std::string _hostdir = ".";
   };
 
 } // namespace AMAYNET
