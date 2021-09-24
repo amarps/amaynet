@@ -24,7 +24,7 @@ namespace AMAYNET
     bool Ready();
 
   protected:
-    virtual int Connect();
+    int Connect();
     
   private:
     std::string _hostname;

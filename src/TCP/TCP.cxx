@@ -51,7 +51,7 @@ namespace AMAYNET
   { }
 
   TCP::TCP(TCP &&other) noexcept
-    : _port(other._port),
+    : _port(std::move(other._port)),
       _file_descriptor(other._file_descriptor),
       _is_use_ssl(other._is_use_ssl),
       ssl_ctx(other.ssl_ctx),
