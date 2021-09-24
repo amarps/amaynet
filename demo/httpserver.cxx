@@ -21,6 +21,7 @@ int main(int argc, char *argv[]) {
 
   // create server
   HTTPServer server(argv[1]);
+  server.SetHostDir("public");
 
   server.Listen();
 
