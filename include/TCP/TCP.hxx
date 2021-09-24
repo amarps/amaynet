@@ -12,9 +12,7 @@ namespace AMAYNET
   /* base class for TCP */
   class TCP {
   public:
-    TCP() :
-      _file_descriptor(0),
-      _is_use_ssl(false) {}
+    TCP();
     TCP(const std::string &port, int file_descriptor);
     virtual ~TCP() noexcept;
     TCP(const TCP &other); 
@@ -63,7 +61,6 @@ namespace AMAYNET
 
     std::vector<char>
     RecvSSL(size_t buf_size=_default_recv_size);
-
     std::vector<char>
     RecvTCP (size_t buf_size=_default_recv_size) const;
 

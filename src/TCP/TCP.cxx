@@ -26,6 +26,10 @@ namespace AMAYNET
     return *this;
   }
 
+  TCP::TCP() :
+    _file_descriptor(0),
+    _is_use_ssl(false) {}
+
   TCP::TCP(const std::string &port, int file_descriptor) {
     SetPort(port);
     SetFD(file_descriptor);
@@ -59,28 +63,21 @@ namespace AMAYNET
   }
 
   int TCP::Send(const std::string &msg_buf) {
-    int sent_byte;
-    if (IsUseSSL()) {
-      sent_byte = SSL_write(ssl_obj, msg_buf.c_str(), msg_buf.length());
-    } else {
-      sent_byte = send(_file_descriptor, msg_buf.c_str(), msg_buf.length(), 0);
-    }
-    if (sent_byte < 0) {
-      throw std::system_error(EFAULT, std::generic_category());
-    }
+    std::vector<char> msg_chrs(msg_buf.begin(), msg_buf.end());
+    int sent_byte = Send(msg_chrs.data(), msg_buf.size());
     return sent_byte;
   }
 
   int TCP::Send(char *msg_buf, size_t size) {
     int sent_byte;
     if (IsUseSSL()) {
-      sent_byte = send(_file_descriptor, msg_buf, size, 0);
+      sent_byte = SSL_write(ssl_obj, msg_buf, size);
     } else {
       sent_byte = send(_file_descriptor, msg_buf, size, 0);
     }
-    
     if (sent_byte < 0) {
       throw std::system_error(EFAULT, std::generic_category());
+      return -1;
     }
     return sent_byte;
   }
