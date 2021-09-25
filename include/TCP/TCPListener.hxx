@@ -65,6 +65,9 @@ namespace AMAYNET
      */
     TCP *Accept();
 
+    /**
+     * @return true if Currentconnection is empty or is 1 step after last element
+     */
     bool IsConnectionEnd() {
       return m_connection.iter() == m_connection.end();
     }
@@ -73,6 +76,9 @@ namespace AMAYNET
       return m_connection.data();
     }
 
+    /**
+     * @return true if CurrentConnection is ready to receive data
+     */
     bool IsConnectionReady() {
       return m_connection.Ready();
     }
@@ -85,6 +91,7 @@ namespace AMAYNET
       m_connection.Next();
     }
 
+    // reset currentconnection to the first element of connection
     void ConnectionBegin() {
       m_connection.MoveToBegin();
     }
