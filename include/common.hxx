@@ -22,15 +22,9 @@ namespace AMAYNET
       POST
     } request_method;
 
-    HTTPRequest(std::string _path, Method _request_method)
-      : path(std::move(_path)),
-	request_method(_request_method)
-    { }
+    HTTPRequest(std::string _path, Method _request_method);
 
-    bool IsValid() const
-    {
-      return request_method != Method::INVALID;
-    }
+    bool IsValid() const;
     
   };
 
@@ -40,10 +34,7 @@ namespace AMAYNET
     std::string msg;
     std::string detail;
   
-    status_T(int _code, const std::string &_msg, const std::string &_detail)
-      :code(_code),
-       msg(_msg),
-       detail(_detail) {}
+    status_T(int _code, const std::string &_msg, const std::string &_detail);
   };
 
   enum Status {
