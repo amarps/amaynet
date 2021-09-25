@@ -9,7 +9,6 @@ typedef struct ssl_st SSL;
 
 namespace AMAYNET
 {
-  /* base class for TCP */
   class TCP {
   public:
     TCP();
@@ -22,22 +21,22 @@ namespace AMAYNET
 
     /**
      * @brief send message in string to this socket
-     * @param msg_buf content of the message to send
+     * @param msg_buf message to send
      * @return number of bytes sent
      */
     virtual int Send(const std::string &msg_buf);
 
     /**
      * @brief send message in byte to this socket
-     * @param msg_buf content of the message to send
+     * @param msg_buf message to send
      * @return number of bytes sent
      */
     virtual int Send(char *msg, size_t size);
 
     /**
-     * @brief receive message to this socket
-     * @param msg_buf content of the message to send
-     * @return number of bytes sent, and recv message
+     * @brief receive message from this socket
+     * @param buf_size length of message to receive
+     * @return message
      */
     virtual std::vector<char>
     Recv(size_t buf_size=_default_recv_size);

@@ -2,10 +2,10 @@
 
 #include <exception>
 #include <fstream>
+#include <sstream>
 #include <iostream>
 #include <iterator>
 #include <map>
-#include <stdexcept>      // std::out_of_range
 #include <string.h>
 #include <sys/socket.h>
 
