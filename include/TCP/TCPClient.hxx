@@ -1,7 +1,7 @@
 #ifndef TCP_TCPCLIENT_HXX
 #define TCP_TCPCLIENT_HXX
 
-#include "TCP/TCP.hxx"
+#include "TCP.hxx"
 
 #include <iostream>
 #include <string>
