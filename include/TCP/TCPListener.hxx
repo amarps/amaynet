@@ -1,7 +1,7 @@
 #ifndef TCP_TCPLISTENER_HXX
 #define TCP_TCPLISTENER_HXX
 
-#include "TCP/TCP.hxx"
+#include "TCP.hxx"
 #include <forward_list>
 #include <stdexcept>
 #include <string>

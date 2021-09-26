@@ -51,6 +51,10 @@ configure_file(AmayNetConfig.h.in ${PROJECT_SOURCE_DIR}/include/AmayNetConfig.hx
 target_include_directories(${PROJECT_NAME} PUBLIC "${PROJECT_BINARY_DIR}")
 target_include_directories(${PROJECT_NAME} PUBLIC "${PROJECT_SOURCE_DIR}/include")
 
+# configure installation
+install(TARGETS amaynet DESTINATION lib)
+install(DIRECTORY "${PROJECT_SOURCE_DIR}/include/" DESTINATION include/amaynet)
+
 # ----------------------------- doxygen configuration --------------------------------
 # first we can indicate the documentation build as an option and set it to ON by default
 option(BUILD_DOC "Build documentation" ON)
