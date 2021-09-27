@@ -108,7 +108,7 @@ namespace AMAYNET {
 
     if (newfd == -1) { /* accept failed */
       perror("Error ");
-      throw std::system_error(EFAULT, std::generic_category());
+      return new TCP();
     }
 
     /* convert network client address to printable client address */

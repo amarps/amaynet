@@ -76,7 +76,7 @@ namespace AMAYNET
       sent_byte = send(_file_descriptor, msg_buf, size, 0);
     }
     if (sent_byte < 0) {
-      throw std::system_error(EFAULT, std::generic_category());
+      perror("Error ");
       return -1;
     }
     return sent_byte;
@@ -108,7 +108,7 @@ namespace AMAYNET
 	return std::vector<char>();
       } else if (err == SSL_ERROR_SYSCALL) {
 	return std::vector<char>();
-	throw std::system_error();
+	perror("Error ");
 	break;
       }
     }
@@ -126,7 +126,8 @@ namespace AMAYNET
 	return std::vector<char>();
       }
       if (bytes_recv == -1) {
-	throw std::system_error(EFAULT, std::generic_category());
+	perror("Error ");
+	return std::vector<char>();
       }
     }
 
