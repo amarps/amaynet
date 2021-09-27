@@ -36,7 +36,15 @@ generate build system using cmake and compile it
 build complete if there is no error.\n\n
 
 ## installing
+after generating build directory you can simply type
+```shell
+	cmake --install .
+```
 
+to choose installation location you can use --prefix like this
+```shell
+	cmake --install . --prefix "/path/to/installdir"
+```
 
 ## uninstalling
 to uninstall just run this command inside build directory
@@ -58,7 +66,7 @@ Tutorial make simple client server chat.
     #include "TCP/TCPClient.hxx"
 
 	#include <iostream>
-	
+
 	int main(int argc, char *argv[]) {
 		if (argc < 2) {
 		    std::cout << "client usage: chat 127.0.0.1 8080\n"
@@ -67,7 +75,7 @@ Tutorial make simple client server chat.
 	        return 1;
         }
 	}
-	
+
 ```
 
 ### Build with g++
