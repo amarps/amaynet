@@ -44,6 +44,7 @@ Prerequisites
 
 # editor configuration file
 .ccls-cache/
+.cache
 coredump
 compile_commands.json
 scratchpad.org
