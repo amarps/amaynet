@@ -35,8 +35,13 @@ namespace AMAYNET {
       _iter_prev = _conn_list.before_begin();
       return;
     }
+
+    if (_last_element == _conn_list.end()) {
+      _last_element = _conn_list.insert_after(_iter_prev, val);
+    } else {
+      _last_element = _conn_list.insert_after(_last_element, val);
+    }
     
-    _last_element = _conn_list.insert_after(_last_element, val);
   }
   
   void C_CONN::Next()
