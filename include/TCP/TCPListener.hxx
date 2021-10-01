@@ -11,42 +11,6 @@ struct sockaddr;
 namespace AMAYNET
 {
   class TCPListener : public TCP {    
-  private:
-    class Connection
-    {
-    public:
-      Connection(TCP *_server);
-
-      ~Connection();
-
-      std::forward_list<TCP*>::iterator iter() const;
-
-      std::forward_list<TCP*>::iterator end();
-
-      void push_back(TCP *val);
-  
-      void Next();
-
-      void Drop();
-
-      bool Ready();
-
-      fd_set Wait();
-      
-      void MoveToBegin();
-
-      TCP *data();
-
-    private:
-      TCP* server;
-      bool connection_droped;
-      fd_set _reads;
-      std::forward_list<TCP*> _conn_list;
-      std::forward_list<TCP*>::iterator _iter;
-      std::forward_list<TCP*>::iterator _iter_prev;
-      std::forward_list<TCP*>::iterator _last_element;
-    };
-
   public:
     /**
      * @brief create listening socket at port 8080 and 10 listen size
@@ -103,6 +67,41 @@ namespace AMAYNET
     int Listen(bool relisten_fail = true);
 
   private:
+    class Connection
+    {
+    public:
+      Connection(TCP *_server);
+
+      ~Connection();
+
+      std::forward_list<TCP*>::iterator iter() const;
+
+      std::forward_list<TCP*>::iterator end();
+
+      void push_back(TCP *val);
+  
+      void Next();
+
+      void Drop();
+
+      bool Ready();
+
+      fd_set Wait();
+      
+      void MoveToBegin();
+
+      TCP *data();
+
+    private:
+      TCP* server;
+      bool connection_droped;
+      fd_set _reads;
+      std::forward_list<TCP*> _conn_list;
+      std::forward_list<TCP*>::iterator _iter;
+      std::forward_list<TCP*>::iterator _iter_prev;
+      std::forward_list<TCP*>::iterator _last_element;
+    };
+
     static void *get_in_addr(sockaddr *sa);
 
     int _listen_size; // how much listen queue size
