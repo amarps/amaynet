@@ -10,6 +10,8 @@
 
 #include "TCP/TCPClient.hxx"
 
+void signal_handler(int);
+
 class ClientChat
 {
 public:
@@ -37,7 +39,7 @@ public:
 
   // set delay before check if there is new chat
   void DelayCheckChat(float val) {
-    _history_check_delay = std::chrono::duration<float>(0.1);
+    _history_check_delay = std::chrono::duration<float>(val);
   }
 
   // get delay before check if there is new chat
