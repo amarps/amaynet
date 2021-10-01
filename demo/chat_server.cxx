@@ -6,6 +6,11 @@
 volatile sig_atomic_t quit = 0;
 AMAYNET::TCPListener *server;
 
+void DropAllConnections();
+void SendToAllConnections(std::vector<char>);
+void HandleConnections();
+void sig_handler(int);
+
 void DropAllConnections() {
   server->ConnectionBegin();
   for (;!server->IsConnectionEnd(); server->NextConnection()) {
@@ -46,7 +51,7 @@ void HandleConnections() {
   }
 }
 
-static void sig_handler(int t/*unused*/)
+void sig_handler(int)
 {
   quit = 1;
   DropAllConnections();
