@@ -115,7 +115,7 @@ private:
       }
       if (!_input.empty()) {
         /// add ;;; to indicate the end of the message
-        _input.append(";;;");
+        _input.append("\r\n");
         if (!_client->Send(_input)) {
           Interrupt();
           break;
@@ -141,12 +141,15 @@ private:
 
   bool GetValidMessage(std::vector<char> &buffer)
   {
-    auto buffer_str = std::string(buffer.begin(), buffer.end());
+    if(buffer.empty())
+      return false;
+    std::vector temp_buffer = buffer;
+    std::string buffer_str = temp_buffer.data();
     static auto start_with = std::string("Client");
     if (buffer_str.substr(0, start_with.size()) != start_with)
       return false;
 
-    auto end_pos = buffer_str.find(";;;");
+    auto end_pos = buffer_str.find("\r\n");
     if (end_pos == std::string::npos)
       return false;
 

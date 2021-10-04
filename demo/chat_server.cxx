@@ -39,7 +39,7 @@ void HandleConnections()
       message.append(std::to_string(server->CurrentConnection()->GetFD()));
       message.append(": ");
       if (buffer[0] == '!') { // client request disconect
-        message.append("(Disconected);;;");
+        message.append("(Disconected)");
         server->DropConnection();
         std::cout << message << std::endl;
         if (server->IsConnectionEnd())
