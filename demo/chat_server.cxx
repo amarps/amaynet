@@ -72,7 +72,7 @@ int main(int argc, char *argv[]) {
       auto client = server->Accept();
       if (client)
 	std::cout << "new connection at file descriptor " << client->GetFD() << std::endl;
-    } catch (std::runtime_error) {
+    } catch (std::runtime_error&) {
       break;
     }
     HandleConnections();

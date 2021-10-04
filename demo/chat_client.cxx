@@ -168,7 +168,7 @@ int main(int argc, char *argv[])
   auto hostname = argv[1];
   try {
     port = std::stoul(argv[2]);
-  } catch (std::invalid_argument) {
+  } catch (std::invalid_argument&) {
     std::cerr << "Invalid port\n"
                  "Usage: client 127.0.0.1 8080"
 	      << std::endl;
