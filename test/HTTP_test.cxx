@@ -1,11 +1,12 @@
-#include <gtest/gtest.h>
 #include <gtest/gtest-spi.h>
+#include <gtest/gtest.h>
 
-#include "TCP/TCPClient.hxx"
 #include "HTTP/Server.hxx"
+#include "TCP/TCPClient.hxx"
 #include "common.hxx"
 
-TEST(http_test, TestLoopbackConnection) {
+TEST(http_test, TestLoopbackConnection)
+{
   AMAYNET::HTTPServer server("9000");
   ASSERT_STREQ(server.GetPort().c_str(), "9000");
   ASSERT_EQ(server.GetFD(), 0);

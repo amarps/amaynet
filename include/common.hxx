@@ -3,58 +3,60 @@
 
 #include <string>
 
-namespace AMAYNET
+namespace AMAYNET {
+struct URL_T
 {
-  struct URL_T {
-    std::string protocol;
-    std::string host;
-    std::string path;
+  std::string protocol;
+  std::string host;
+  std::string path;
 
-    URL_T() = default;
-    URL_T(std::string url);
-  };
+  URL_T() = default;
+  URL_T(std::string url);
+};
 
-  struct HTTPRequest {
-    std::string path;
-    enum Method {
-      INVALID = 0,
-      GET,
-      POST
-    } request_method;
+struct HTTPRequest
+{
+  std::string path;
+  enum Method
+  {
+    INVALID = 0,
+    GET,
+    POST
+  } request_method;
 
-    HTTPRequest(std::string _path, Method _request_method);
+  HTTPRequest(std::string _path, Method _request_method);
 
-    bool IsValid() const;
-    
-  };
+  bool IsValid() const;
+};
 
-  /* message and detail from https://httpstatuses.com */
-  struct status_T {
-    int code;
-    std::string msg;
-    std::string detail;
-  
-    status_T(int _code, const std::string &_msg, const std::string &_detail);
-  };
+/* message and detail from https://httpstatuses.com */
+struct status_T
+{
+  int code;
+  std::string msg;
+  std::string detail;
 
-  enum Status {
-    // Success status
-    OK,
-    CREATED,
-    ACCEPTED,
+  status_T(int _code, const std::string &_msg, const std::string &_detail);
+};
 
-    // Client Error
-    BAD_REQUEST,
-    UNAUTHORIZED,
-    FORBIDDEN,
-    NOT_FOUND,
-    REQUEST_TIMEOUT,
+enum Status
+{
+  // Success status
+  OK,
+  CREATED,
+  ACCEPTED,
 
-    // Server Error
-    NOT_IMPLEMENTED,
-    HTTP_VERSION_NOT_SUPPORTED,
-  };
+  // Client Error
+  BAD_REQUEST,
+  UNAUTHORIZED,
+  FORBIDDEN,
+  NOT_FOUND,
+  REQUEST_TIMEOUT,
 
+  // Server Error
+  NOT_IMPLEMENTED,
+  HTTP_VERSION_NOT_SUPPORTED,
+};
 
 } // namespace AMAYNET
 

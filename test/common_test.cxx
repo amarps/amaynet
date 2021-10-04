@@ -1,7 +1,8 @@
-#include <gtest/gtest.h>
 #include "common.hxx"
+#include <gtest/gtest.h>
 
-TEST(CommonTest, URL_Ttest) {
+TEST(CommonTest, URL_Ttest)
+{
   // Call to default constructor will return empty object
   AMAYNET::URL_T url0;
   ASSERT_TRUE(url0.protocol.empty());
@@ -13,7 +14,7 @@ TEST(CommonTest, URL_Ttest) {
   ASSERT_EQ(url1.protocol, "80");
   ASSERT_EQ(url1.host, "example.com");
   ASSERT_EQ(url1.path, "/");
-  
+
   // test http url
   AMAYNET::URL_T url2("http://example.com");
   ASSERT_EQ(url2.protocol, "80");
@@ -40,5 +41,4 @@ TEST(CommonTest, URL_Ttest) {
   ASSERT_EQ(invalid_url.protocol, "80");
   ASSERT_EQ(invalid_url.host, "cqwrryc8oyacayy3");
   ASSERT_EQ(invalid_url.path, "/");
-
 }
